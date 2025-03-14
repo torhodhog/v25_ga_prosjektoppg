@@ -20,35 +20,35 @@ export function SidebarDemo() {
       label: "Dashboard",
       href: "#",
       icon: (
-        <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconBrandTabler className="text-red-400 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
     {
       label: "Profil",
       href: "#",
       icon: (
-        <IconUserBolt className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconUserBolt className="text-red-500 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
     {
       label: "Pasienter",
       href: "#",
       icon: (
-        <FaPeopleArrows className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <FaPeopleArrows className="text-red-600 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
     {
       label: "Innstillinger",
       href: "#",
       icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconSettings className="text-red-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
     {
       label: "Logout",
       href: "#",
       icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
+        <IconArrowLeft className="text-red-800 dark:text-neutral-200 h-5 w-5 shrink-0" />
       ),
     },
   ];
