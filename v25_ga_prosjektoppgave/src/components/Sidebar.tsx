@@ -28,7 +28,7 @@ export function SidebarDemo({ user }: SidebarProps) {
 
   const links = [
     { label: "Dashboard", href: "/admin", icon: <IconBrandTabler className="text-red-400 h-5 w-5 shrink-0" /> },
-    { label: "Profil", href: "/admin/profil", icon: <IconUserBolt className="text-red-500 h-5 w-5 shrink-0" /> },
+    { label: "Profil", href: "/admin/profile", icon: <IconUserBolt className="text-red-500 h-5 w-5 shrink-0" /> },
     { label: "Pasienter", href: "/admin/pasienter", icon: <FaPeopleArrows className="text-red-600 h-5 w-5 shrink-0" /> },
     { label: "Innstillinger", href: "/admin/innstillinger", icon: <IconSettings className="text-red-700 h-5 w-5 shrink-0" /> },
   ];
