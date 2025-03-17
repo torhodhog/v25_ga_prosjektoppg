@@ -6,86 +6,65 @@ import {
   IconBrandTabler,
   IconSettings,
   IconUserBolt,
-  
 } from "@tabler/icons-react";
 import { FaPeopleArrows } from "react-icons/fa";
-
-import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Import for navigering
 import { cn } from "@/lib/utils";
 
-export function SidebarDemo() {
-  const links = [
-    {
-      label: "Dashboard",
-      href: "#",
-      icon: (
-        <IconBrandTabler className="text-red-400 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
-    },
-    {
-      label: "Profil",
-      href: "#",
-      icon: (
-        <IconUserBolt className="text-red-500 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
-    },
-    {
-      label: "Pasienter",
-      href: "#",
-      icon: (
-        <FaPeopleArrows className="text-red-600 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
-    },
-    {
-      label: "Innstillinger",
-      href: "#",
-      icon: (
-        <IconSettings className="text-red-700 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
-    },
-    {
-      label: "Logout",
-      href: "#",
-      icon: (
-        <IconArrowLeft className="text-red-800 dark:text-neutral-200 h-5 w-5 shrink-0" />
-      ),
-    },
-  ];
+interface SidebarProps {
+  user: { navn: string } | null;
+}
+
+export function SidebarDemo({ user }: SidebarProps) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  // Logg ut-funksjon
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Fjern token
+    router.push("/"); // Send brukeren til innloggingssiden
+  };
+
+  const links = [
+    { label: "Dashboard", href: "/admin", icon: <IconBrandTabler className="text-red-400 h-5 w-5 shrink-0" /> },
+    { label: "Profil", href: "/admin/profil", icon: <IconUserBolt className="text-red-500 h-5 w-5 shrink-0" /> },
+    { label: "Pasienter", href: "/admin/pasienter", icon: <FaPeopleArrows className="text-red-600 h-5 w-5 shrink-0" /> },
+    { label: "Innstillinger", href: "/admin/innstillinger", icon: <IconSettings className="text-red-700 h-5 w-5 shrink-0" /> },
+  ];
+
   return (
-    <div
-      className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 flex-1 max-w-7xl mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden absolute leg-0",
-        "h-screen" // Endret fra `h-[60vh]` til `h-screen`
-      )}
-    >
+    <div className={cn("rounded-md flex flex-col md:flex-row bg-gray-100 h-screen")}>
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex flex-col flex-1 overflow-y-auto">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 p-2 w-full text-left text-red-800 hover:bg-red-100 rounded-md"
+            >
+              <IconArrowLeft className="h-5 w-5  shrink-0" />
+              <span>Logg ut</span>
+            </button>
           </div>
-          <div>
-            <SidebarLink
-              link={{
-                label: "Manu Arora",
-                href: "#",
-                icon: (
-                  <Image
-                    src="/"
-                    className="h-7 w-7 shrink-0 rounded-full"
-                    width={50}
-                    height={50}
-                    alt="Avatar"
-                  />
-                ),
-              }}
+
+          {/* Brukerinformasjon */}
+          <div className="flex items-center gap-2 p-4">
+            <Image
+              src="/doctor.png"
+              className="h-7 w-7 shrink-0 rounded-full"
+              width={50}
+              height={50}
+              alt="Avatar"
             />
+            <span className="text-neutral-700 dark:text-neutral-200 text-sm">
+              {user ? user.navn : "Ukjent bruker"}
+            </span>
           </div>
         </SidebarBody>
       </Sidebar>
@@ -93,27 +72,14 @@ export function SidebarDemo() {
   );
 }
 
-export const Logo = () => {
-  return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-    >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm shrink-0" />
-      <span className="font-medium text-black dark:text-white whitespace-pre">
-        Fysio logo
-      </span>
-    </Link>
-  );
-};
+export const Logo = () => (
+  <div className="flex items-center justify-center py-4">
+    <Image src="/logo.png" alt="Logo" width={100} height={100} className="object-contain" />
+  </div>
+);
 
-export const LogoIcon = () => {
-  return (
-    <Link
-      href="#"
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
-    >
-      <div className="h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm shrink-0" />
-    </Link>
-  );
-};
+export const LogoIcon = () => (
+  <div className="flex items-center justify-center py-4">
+    <Image src="/logo.png" alt="Logo" width={50} height={50} className="object-contain" />
+  </div>
+);

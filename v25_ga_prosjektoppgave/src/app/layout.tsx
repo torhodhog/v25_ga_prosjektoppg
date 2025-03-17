@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "../lib/utils";
 
-import { SidebarDemo } from "@/components/Sidebar";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +30,7 @@ export default function RootLayout({
       <body className={cn(geistSans.variable, geistMono.variable, "relative h-full font-sans antialiased")}>
         
         <main className="relative flex flex-col min-h-screen">
-          <SidebarDemo />
+     
           <div className="flex-grow flex-1">
           {children}
           </div>
