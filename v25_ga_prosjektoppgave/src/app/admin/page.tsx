@@ -1,4 +1,4 @@
-import ChatbotButton from "@/components/ChatBotButtom";
+// import ChatbotButton from "@/components/ChatBotButtom";
 import GridComponent from "@/components/gridComponent";
 
 export default function AdminPage() {
@@ -6,7 +6,7 @@ export default function AdminPage() {
     <div>
       <h1 className="text-2xl font-bold ml-12">Tilgang kun for terapeuter</h1>
       <GridComponent />
-      <ChatbotButton />
+      {/* <ChatbotButton /> */}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Users, Bell, FileText, Book } from "lucide-react"; // Importer relevante ikoner
+import { Users, Bell, FileText, Book } from "lucide-react"; 
 
 const gridItems = [
   { id: 1, icon: <Users size={40} />, title: "Pasienter", href: "/admin/pasienter" },

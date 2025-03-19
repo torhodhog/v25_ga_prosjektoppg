@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { FaPeopleArrows } from "react-icons/fa";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // Import for navigering
+import { useRouter } from "next/navigation"; 
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -23,7 +23,7 @@ export function SidebarDemo({ user }: SidebarProps) {
   // Logg ut-funksjon
   const handleLogout = () => {
     localStorage.removeItem("token"); // Fjern token
-    router.push("/"); // Send brukeren til innloggingssiden
+    router.push("/"); 
   };
 
   const links = [
