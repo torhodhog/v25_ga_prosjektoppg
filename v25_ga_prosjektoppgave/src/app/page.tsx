@@ -24,8 +24,8 @@ export default function Home() {
         throw new Error(data.message || "Innlogging feilet");
       }
 
-      localStorage.setItem("token", data.token); // Lagre token for senere bruk
-      window.location.href = "/admin"; // Redirect til admin-panelet
+      localStorage.setItem("token", data.token); 
+      window.location.href = "/admin"; 
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
