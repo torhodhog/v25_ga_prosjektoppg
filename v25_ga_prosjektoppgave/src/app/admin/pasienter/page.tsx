@@ -1,3 +1,25 @@
+/**
+ * Oversikt over alle pasienter
+ * 
+ * Denne komponenten viser en oversikt over alle pasientene til den innloggede terapeuten.
+ * 
+ * Funksjonalitet:
+ * - Henter pasienter knyttet til terapeuten ved hjelp av `/api/pasienter/mine`.
+ * - Viser liste over pasienter, der hver pasient kan klikkes for å gå til detaljsiden.
+ * - Lar terapeuten legge til en ny pasient via et skjema.
+ * - Skjemaet vises/dettes ned ved å trykke på en knapp.
+ * - Spinner vises mens data hentes.
+ * - Håndterer feil og validering, inkludert token-sjekk.
+ * 
+ * Teknisk:
+ * - Bruker `useEffect` for å hente pasienter ved lasting.
+ * - Bruker `useState` til å håndtere skjema, pasientliste, feilmeldinger og innlastingsstatus.
+ * - Kommunikasjon med backend skjer via `fetch`, med Bearer-token for autentisering.
+ * - Bruker `Link` fra Next.js for å navigere til detaljsiden for hver pasient.
+ */
+
+
+
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link"; 

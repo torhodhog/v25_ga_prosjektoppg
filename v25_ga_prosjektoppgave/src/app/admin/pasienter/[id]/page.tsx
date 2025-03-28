@@ -1,3 +1,24 @@
+
+/**
+ * Deljside om hver enkelt pasient. 
+ * 
+ * Denne komponenten viser detaljert informasjon om én spesifikk pasient.
+ * 
+ * Funksjonalitet:
+ * - Henter pasientdata fra backend ved hjelp av pasientens ID fra URL.
+ * - Viser og lar brukeren redigere felter som navn, alder, adresse, smerterate osv.
+ * - Viser en graf med pasientens historiske smerterater ved hjelp av Recharts.
+ * - Henter og viser tidligere rapporter knyttet til pasienten.
+ * 
+ * Teknisk:
+ * - Bruker `useEffect` til å hente data ved lasting av komponenten.
+ * - Bruker `useState` til å håndtere både pasientdata og redigeringsmodus.
+ * - Redigering av felter skjer inline, med input-felt som vises ved klikk.
+ * - Data oppdateres med en `PUT`-forespørsel til backend ved lagring.
+ * - Autentisering håndteres med JWT-token lagret i localStorage.
+ */
+
+
 "use client";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { useParams } from "next/navigation";
@@ -223,6 +244,8 @@ export default function PasientDetaljer() {
           <p>Laster pasientinformasjon...</p>
         )}
       </div>
+
+      
     </MaxWidthWrapper>
   );
 }
