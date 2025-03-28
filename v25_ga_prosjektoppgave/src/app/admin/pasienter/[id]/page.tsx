@@ -29,7 +29,14 @@ export default function PasientDetaljer() {
     smertehistorikk: { verdi: number; dato: string }[];
   }
 
+  interface Rapport {
+    _id: string;
+    innhold: string;
+    dato: string;
+  }
+
   const [pasient, setPasient] = useState<Pasient | null>(null);
+  const [rapporter, setRapporter] = useState<Rapport[]>([]);
   const [editableField, setEditableField] = useState<keyof Pasient | null>(null);
   const [editedValue, setEditedValue] = useState<string | number>("");
 
@@ -48,8 +55,27 @@ export default function PasientDetaljer() {
     setPasient(data);
   };
 
+  const fetchRapporter = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const data = await res.json();
+      setRapporter(data);
+    } catch (err) {
+      console.error("Feil ved henting av rapporter:", err);
+    }
+  };
+
   useEffect(() => {
     fetchPasient();
+    fetchRapporter();
   }, [id]);
 
   const handleSave = async () => {
@@ -102,7 +128,7 @@ export default function PasientDetaljer() {
             if (typeof value === "string" || typeof value === "number") {
               setEditedValue(value);
             } else {
-              setEditedValue(""); // For tomme felt
+              setEditedValue("");
             }
             setEditableField(field);
           }}
@@ -112,7 +138,7 @@ export default function PasientDetaljer() {
               if (typeof value === "string" || typeof value === "number") {
                 setEditedValue(value);
               } else {
-                setEditedValue(""); // For tomme felt
+                setEditedValue("");
               }
               setEditableField(field);
             }
@@ -134,7 +160,6 @@ export default function PasientDetaljer() {
       )}
     </p>
   );
-  
 
   return (
     <MaxWidthWrapper>
@@ -175,6 +200,24 @@ export default function PasientDetaljer() {
                 </ResponsiveContainer>
               </div>
             )}
+
+            <div className="mt-10">
+              <h2 className="text-xl font-semibold mb-2">Tidligere rapporter</h2>
+              {rapporter.length > 0 ? (
+                <ul className="space-y-3">
+                  {rapporter.map((rapport) => (
+                    <li key={rapport._id} className="border p-4 rounded shadow-sm">
+                      <p className="text-sm text-gray-500">
+                        {new Date(rapport.dato).toLocaleDateString("no-NO")}
+                      </p>
+                      <p>{rapport.innhold}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="italic text-gray-500">Ingen rapporter registrert.</p>
+              )}
+            </div>
           </>
         ) : (
           <p>Laster pasientinformasjon...</p>
