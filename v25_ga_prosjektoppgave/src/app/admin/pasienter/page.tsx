@@ -17,6 +17,7 @@ export default function PasientPage() {
   const [navn, setNavn] = useState<string>("");
   const [alder, setAlder] = useState<string>("");
   const [diagnose, setDiagnose] = useState<string>("");
+  const [showForm, setShowForm] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchPasienter = async () => {
@@ -49,75 +50,86 @@ export default function PasientPage() {
   return (
     <>
       <div className="mt-10 border-t pt-6">
-        <h2 className="text-xl font-bold mb-4">Legg til ny pasient</h2>
+  <div className="flex items-center justify-between mb-4">
+    
+    <button
+      onClick={() => setShowForm(!showForm)}
+      className="text-sm text-white bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition"
+    >
+      {showForm ? "Lukk" : "Legg til pasient"}
+    </button>
+  </div>
 
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const token = localStorage.getItem("token");
-            if (!token) {
-              setError("Ingen token funnet.");
-              return;
-            }
+  {showForm && (
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setError("Ingen token funnet.");
+          return;
+        }
 
-            const res = await fetch("https://fysioterapi-backend-production.up.railway.app/api/pasienter", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({ navn, alder: Number(alder), diagnose }),
-            });
+        const res = await fetch("https://fysioterapi-backend-production.up.railway.app/api/pasienter", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ navn, alder: Number(alder), diagnose }),
+        });
 
-            if (!res.ok) {
-              const errorData = await res.json();
-              setError(errorData.error || "Noe gikk galt ved oppretting.");
-              return;
-            }
+        if (!res.ok) {
+          const errorData = await res.json();
+          setError(errorData.error || "Noe gikk galt ved oppretting.");
+          return;
+        }
 
-            const newPasient = await res.json();
-            setPasienter((prev) => [...prev, newPasient]);
-            setNavn(""); setAlder(""); setDiagnose("");
-          }}
-          className="space-y-4"
-        >
-          <input
-            type="text"
-            placeholder="Navn"
-            value={navn}
-            onChange={(e) => setNavn(e.target.value)}
-            className="border p-2 w-full rounded"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Alder"
-            value={alder}
-            onChange={(e) => setAlder(e.target.value)}
-            className="border p-2 w-full rounded"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Diagnose"
-            value={diagnose}
-            onChange={(e) => setDiagnose(e.target.value)}
-            className="border p-2 w-full rounded"
-            required
-          />
+        const newPasient = await res.json();
+        setPasienter((prev) => [...prev, newPasient]);
+        setNavn(""); setAlder(""); setDiagnose("");
+        setShowForm(false); 
+      }}
+      className="space-y-4 transition-all duration-300"
+    >
+      <input
+        type="text"
+        placeholder="Navn"
+        value={navn}
+        onChange={(e) => setNavn(e.target.value)}
+        className="border p-2 w-full rounded"
+        required
+      />
+      <input
+        type="number"
+        placeholder="Alder"
+        value={alder}
+        onChange={(e) => setAlder(e.target.value)}
+        className="border p-2 w-full rounded"
+        required
+      />
+      <input
+        type="text"
+        placeholder="Diagnose"
+        value={diagnose}
+        onChange={(e) => setDiagnose(e.target.value)}
+        className="border p-2 w-full rounded"
+        required
+      />
 
-          <button
-            type="submit"
-            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
-          >
-            Legg til pasient
-          </button>
-        </form>
-      </div>
+      <button
+        type="submit"
+        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+      >
+        Lagre pasient
+      </button>
+    </form>
+  )}
+</div>
 
       <MaxWidthWrapper>
         <div className="max-w-3xl mx-auto py-10">
-          <h1 className="text-2xl font-bold text-center">Her er alle dine pasienter</h1>
+          <h1 className="text-2xl font-bold text-center">Mine  pasienter</h1>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 
@@ -130,9 +142,9 @@ export default function PasientPage() {
               {pasienter.map((pasient) => (
                 <Link href={`/admin/pasienter/${pasient._id}`} key={pasient._id}>
                   <li className="border p-4 rounded-lg shadow-sm hover:bg-gray-50 transition cursor-pointer">
-                    <h2 className="text-lg font-semibold">{pasient.navn}</h2>
-                    <p>Alder: {pasient.alder}</p>
-                    <p>Diagnose: {pasient.diagnose}</p>
+                    <h2 className="text-lg font-semibold text-red-700">{pasient.navn}</h2>
+                    <p className="font-extralight">Alder: {pasient.alder}</p>
+                    <p>Diagnose: <span className="font-bold"> {pasient.diagnose}</span></p>
                   </li>
                 </Link>
               ))}

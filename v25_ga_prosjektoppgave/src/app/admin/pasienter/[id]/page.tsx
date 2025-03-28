@@ -96,47 +96,54 @@ export default function PasientDetaljer() {
           </button>
         </>
       ) : (
-        <span
-          role="button"
-          tabIndex={0}
+        <button
           onClick={() => {
             const value = pasient?.[field];
             if (typeof value === "string" || typeof value === "number") {
-              setEditableField(field);
               setEditedValue(value);
             } else {
-              setEditedValue("");
+              setEditedValue(""); // For tomme felt
             }
+            setEditableField(field);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               const value = pasient?.[field];
               if (typeof value === "string" || typeof value === "number") {
-                setEditableField(field);
                 setEditedValue(value);
               } else {
-                setEditedValue("");
+                setEditedValue(""); // For tomme felt
               }
+              setEditableField(field);
             }
           }}
-          className="cursor-pointer hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="cursor-pointer hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent border-none p-0"
         >
-          {typeof pasient?.[field] === "string" || typeof pasient?.[field] === "number"
-            ? pasient?.[field]
-            : "Klikk for å legge til"}
-        </span>
+          {pasient?.[field] !== undefined && pasient?.[field] !== "" ? (
+            (() => {
+              const fieldValue = pasient?.[field];
+              if (Array.isArray(fieldValue)) {
+                return <span className="italic text-gray-400">Ikke støttet for visning</span>;
+              }
+              return fieldValue;
+            })()
+          ) : (
+            <span className="italic text-gray-400">Klikk for å legge til</span>
+          )}
+        </button>
       )}
     </p>
   );
+  
 
   return (
     <MaxWidthWrapper>
       <div className="p-6 max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Pasientdetaljer</h1>
+        <h1 className="text-2xl font-bold mb-4">Pasientdetaljer for {pasient?.navn}</h1>
 
         {pasient ? (
           <>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {renderField("Navn", "navn")}
               {renderField("Alder", "alder")}
               {renderField("Kjønn", "kjønn")}
@@ -144,7 +151,7 @@ export default function PasientDetaljer() {
               {renderField("Telefon", "telefon")}
               {renderField("E-post", "epost")}
               {renderField("Diagnose", "diagnose")}
-              {renderField("Smerterate", "smerterate")}
+              {renderField("Smerterate ved første møte", "smerterate")}
               {renderField("Fremgang", "fremgang")}
               {renderField("Henvisende lege", "henvisendeLege")}
               {renderField("Kommentar", "kommentar")}

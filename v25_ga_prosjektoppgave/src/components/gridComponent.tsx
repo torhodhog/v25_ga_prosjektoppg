@@ -5,9 +5,9 @@ import { Users, Bell, FileText, Book } from "lucide-react";
 
 const gridItems = [
   { id: 1, icon: <Users size={40} />, title: "Pasienter", href: "/admin/pasienter" },
-  { id: 2, icon: <Bell size={40} />, title: "Varsler", href: "/varsler" },
-  { id: 3, icon: <FileText size={40} />, title: "Rapporter", href: "/rapporter" },
-  { id: 4, icon: <Book size={40} />, title: "Bibliotek", href: "/bibliotek" },
+  { id: 2, icon: <Bell size={40} />, title: "Varsler", href: "/admin/varsler" },
+  { id: 3, icon: <FileText size={40} />, title: "Rapporter", href: "/admin/rapporter" },
+  { id: 4, icon: <Book size={40} />, title: "Bibliotek", href: "/admin/bibliotek" },
 ];
 
 const GridComponent = () => {
