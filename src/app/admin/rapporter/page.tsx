@@ -55,41 +55,85 @@ export default function NyRapportPage() {
 
   return (
     <MaxWidthWrapper>
-      <div className="max-w-2xl mx-auto py-10">
-        <h1 className="text-2xl font-bold mb-6 text-center">Skriv ny rapport</h1>
-
-        <label className="block mb-2">Velg pasient:</label>
-        <select
-          value={valgtPasientId}
-          onChange={(e) => setValgtPasientId(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
-        >
-          <option value="">-- Velg pasient --</option>
-          {pasienter.map((p: Pasient) => (
-            <option key={p._id} value={p._id}>
-              {p.navn}
-            </option>
-          ))}
-        </select>
-
-        <label className="block mb-2">Rapportinnhold:</label>
-        <textarea
-          value={innhold}
-          onChange={(e) => setInnhold(e.target.value)}
-          className="w-full p-2 border rounded mb-4"
-          rows={6}
-        />
-
-        <button
-          onClick={sendRapport}
-          className="bg-red-600 text-white px-6 py-2 rounded"
-        >
-          Send rapport
-        </button>
-
-        {success && <p className="text-green-600 mt-4">{success}</p>}
-        {error && <p className="text-red-600 mt-4">{error}</p>}
+      <div className="max-w-2xl mx-auto py-10 space-y-6">
+        <h1 className="text-3xl font-bold text-center text-gray-800">📝 Ny pasientrapport</h1>
+  
+        {/* Velg pasient */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Velg pasient:</label>
+          <select
+            value={valgtPasientId}
+            onChange={(e) => setValgtPasientId(e.target.value)}
+            className="w-full border border-gray-300 rounded px-3 py-2"
+          >
+            <option value="">-- Velg pasient --</option>
+            {pasienter.map((p) => (
+              <option key={p._id} value={p._id}>
+                {p.navn}
+              </option>
+            ))}
+          </select>
+        </div>
+  
+        {/* Hvis pasient er valgt, vis kort */}
+        {valgtPasientId && (
+          <div className="bg-gray-50 p-4 rounded shadow-sm border border-gray-200">
+            <p className="text-sm text-gray-700">
+              📌 <strong>Pasient:</strong> {pasienter.find(p => p._id === valgtPasientId)?.navn}
+            </p>
+            <p className="text-sm text-gray-500">
+              📅 <strong>Dato:</strong> {new Date().toLocaleDateString("no-NO")}
+            </p>
+          </div>
+        )}
+  
+        {/* Rapportinnhold */}
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-semibold mb-1">🩺 Symptomer</label>
+            <textarea
+              placeholder="Beskriv pasientens symptomer..."
+              className="w-full border rounded px-3 py-2"
+              rows={3}
+              value={innhold}
+              onChange={(e) => setInnhold(e.target.value)}
+            />
+          </div>
+  
+          <div>
+            <label className="block text-sm font-semibold mb-1">👁 Observasjoner</label>
+            <textarea
+              placeholder="Noter funn eller observasjoner"
+              className="w-full border rounded px-3 py-2"
+              rows={3}
+            />
+          </div>
+  
+          <div>
+            <label className="block text-sm font-semibold mb-1">✅ Tiltak / Anbefalinger</label>
+            <textarea
+              placeholder="Anbefalte tiltak eller videre oppfølging"
+              className="w-full border rounded px-3 py-2"
+              rows={3}
+            />
+          </div>
+        </div>
+  
+        {/* Send knapp */}
+        <div className="pt-4">
+          <button
+            onClick={sendRapport}
+            className="bg-red-600 hover:bg-red-700 transition text-white px-6 py-2 rounded font-semibold w-full"
+          >
+            📤 Send rapport
+          </button>
+        </div>
+  
+        {/* Tilbakemeldinger */}
+        {success && <p className="text-green-600 text-center">{success}</p>}
+        {error && <p className="text-red-600 text-center">{error}</p>}
       </div>
     </MaxWidthWrapper>
   );
+  
 }
