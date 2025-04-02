@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import Image from "next/image";
+// import Image from "next/image";
+import Elev8LogoReveal from "@/components/Elev8LogoReveal";
 
 export default function Home() {
   const [username, setUsername] = useState("");
@@ -51,7 +52,7 @@ export default function Home() {
 
       <MaxWidthWrapper>
         <div className="py-20 mx-auto text-center flex flex-col items-center max-w-3xl">
-          <Image src="/logo.png" alt="Logo" width={350} height={350} />
+          <Elev8LogoReveal />
           <form
             className="mt-8 w-full max-w-sm bg-white/80 p-6 rounded shadow-lg"
             onSubmit={(e) => {
