@@ -1,15 +1,14 @@
-
 /**
- * Deljside om hver enkelt pasient. 
- * 
+ * Deljside om hver enkelt pasient.
+ *
  * Denne komponenten viser detaljert informasjon om én spesifikk pasient.
- * 
+ *
  * Funksjonalitet:
  * - Henter pasientdata fra backend ved hjelp av pasientens ID fra URL.
  * - Viser og lar brukeren redigere felter som navn, alder, adresse, smerterate osv.
  * - Viser en graf med pasientens historiske smerterater ved hjelp av Recharts.
  * - Henter og viser tidligere rapporter knyttet til pasienten.
- * 
+ *
  * Teknisk:
  * - Bruker `useEffect` til å hente data ved lasting av komponenten.
  * - Bruker `useState` til å håndtere både pasientdata og redigeringsmodus.
@@ -17,7 +16,6 @@
  * - Data oppdateres med en `PUT`-forespørsel til backend ved lagring.
  * - Autentisering håndteres med JWT-token lagret i localStorage.
  */
-
 
 "use client";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
@@ -58,7 +56,9 @@ export default function PasientDetaljer() {
 
   const [pasient, setPasient] = useState<Pasient | null>(null);
   const [rapporter, setRapporter] = useState<Rapport[]>([]);
-  const [editableField, setEditableField] = useState<keyof Pasient | null>(null);
+  const [editableField, setEditableField] = useState<keyof Pasient | null>(
+    null
+  );
   const [editedValue, setEditedValue] = useState<string | number>("");
 
   const fetchPasient = async () => {
@@ -135,10 +135,7 @@ export default function PasientDetaljer() {
             onChange={(e) => setEditedValue(e.target.value)}
             className="border px-2 py-1 rounded"
           />
-          <button
-            onClick={handleSave}
-            className="ml-2 text-sm text-blue-600"
-          >
+          <button onClick={handleSave} className="ml-2 text-sm text-blue-600">
             Lagre
           </button>
         </>
@@ -170,7 +167,11 @@ export default function PasientDetaljer() {
             (() => {
               const fieldValue = pasient?.[field];
               if (Array.isArray(fieldValue)) {
-                return <span className="italic text-gray-400">Ikke støttet for visning</span>;
+                return (
+                  <span className="italic text-gray-400">
+                    Ikke støttet for visning
+                  </span>
+                );
               }
               return fieldValue;
             })()
@@ -184,12 +185,14 @@ export default function PasientDetaljer() {
 
   return (
     <MaxWidthWrapper>
-      <div className="p-6 max-w-3xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">Pasientdetaljer for {pasient?.navn}</h1>
+      <div className="p-8 max-w-3xl mx-auto bg-white rounded-lg">
+        <h1 className="text-2xl font-bold mb-6">
+          Pasientdetaljer for {pasient?.navn}:
+        </h1>
 
         {pasient ? (
           <>
-            <div className="space-y-3">
+            <div className="space-y-4 bg-gray-50 p-6 rounded-lg border-2 border-gray-300 shadow-xl">
               {renderField("Navn", "navn")}
               {renderField("Alder", "alder")}
               {renderField("Kjønn", "kjønn")}
@@ -222,12 +225,17 @@ export default function PasientDetaljer() {
               </div>
             )}
 
-            <div className="mt-10">
-              <h2 className="text-xl font-semibold mb-2">Tidligere rapporter</h2>
+            <div className="mt-5 bg-white p-6 rounded-lg shadow-xl border-2 border-gray-300">
+              <h2 className="text-xl font-semibold mb-2">
+                Tidligere rapporter
+              </h2>
               {rapporter.length > 0 ? (
                 <ul className="space-y-3">
                   {rapporter.map((rapport) => (
-                    <li key={rapport._id} className="border p-4 rounded shadow-sm">
+                    <li
+                      key={rapport._id}
+                      className="border p-4 rounded shadow-sm"
+                    >
                       <p className="text-sm text-gray-500">
                         {new Date(rapport.dato).toLocaleDateString("no-NO")}
                       </p>
@@ -236,7 +244,9 @@ export default function PasientDetaljer() {
                   ))}
                 </ul>
               ) : (
-                <p className="italic text-gray-500">Ingen rapporter registrert.</p>
+                <p className="italic text-gray-500">
+                  Ingen rapporter registrert.
+                </p>
               )}
             </div>
           </>
@@ -244,8 +254,6 @@ export default function PasientDetaljer() {
           <p>Laster pasientinformasjon...</p>
         )}
       </div>
-
-      
     </MaxWidthWrapper>
   );
 }
