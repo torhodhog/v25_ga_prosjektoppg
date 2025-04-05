@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 import { FaPeopleArrows } from "react-icons/fa";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -23,18 +23,38 @@ export function SidebarDemo({ user }: SidebarProps) {
   // Logg ut-funksjon
   const handleLogout = () => {
     localStorage.removeItem("token"); // Fjern token
-    router.push("/"); 
+    router.push("/");
   };
 
   const links = [
-    { label: "Dashboard", href: "/admin", icon: <IconBrandTabler className="text-red-400 h-5 w-5 shrink-0" /> },
-    { label: "Profil", href: "/admin/profile", icon: <IconUserBolt className="text-red-500 h-5 w-5 shrink-0" /> },
-    { label: "Pasienter", href: "/admin/pasienter", icon: <FaPeopleArrows className="text-red-600 h-5 w-5 shrink-0" /> },
-    { label: "Innstillinger", href: "/admin/settings", icon: <IconSettings className="text-red-700 h-5 w-5 shrink-0" /> },
+    {
+      label: "Dashboard",
+      href: "/admin",
+      icon: <IconBrandTabler className="text-teal h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Profil",
+      href: "/admin/profile",
+      icon: <IconUserBolt className="text-teal h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Pasienter",
+      href: "/admin/pasienter",
+      icon: <FaPeopleArrows className="text-teal h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Innstillinger",
+      href: "/admin/settings",
+      icon: <IconSettings className="text-teal h-5 w-5 shrink-0" />,
+    },
   ];
 
   return (
-    <div className={cn("rounded-md flex flex-col md:flex-row bg-gray-100 h-screen")}>
+    <div
+      className={cn(
+        "rounded-md flex flex-col md:flex-row bg-neutral_gray h-screen"
+      )}
+    >
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto">
@@ -46,7 +66,7 @@ export function SidebarDemo({ user }: SidebarProps) {
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 p-2 w-full text-left text-red-800 hover:bg-red-100 rounded-md"
+              className="flex items-center gap-2 p-2 w-full text-left text-teal hover:bg-yellow rounded-md"
             >
               <IconArrowLeft className="h-5 w-5  shrink-0" />
               <span>Logg ut</span>
@@ -74,12 +94,24 @@ export function SidebarDemo({ user }: SidebarProps) {
 
 export const Logo = () => (
   <div className="flex items-center justify-center py-4">
-    <Image src="/logo.png" alt="Logo" width={100} height={100} className="object-contain" />
+    <Image
+      src="/logo.png"
+      alt="Logo"
+      width={100}
+      height={100}
+      className="object-contain"
+    />
   </div>
 );
 
 export const LogoIcon = () => (
   <div className="flex items-center justify-center py-4">
-    <Image src="/logo.png" alt="Logo" width={50} height={50} className="object-contain" />
+    <Image
+      src="/logo.png"
+      alt="Logo"
+      width={50}
+      height={50}
+      className="object-contain"
+    />
   </div>
 );
