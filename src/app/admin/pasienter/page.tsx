@@ -72,11 +72,11 @@ export default function PasientPage() {
 
   return (
     <>
-      <div className="mt-10 border-t pt-6">
+      <div className="mt-10 border-t pt-6 ">
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setShowForm(!showForm)}
-            className="text-sm text-white bg-red-600 px-4 py-2 rounded hover:bg-red-700 transition"
+            className="text-sm text-turquoise bg-teal px-4 py-2 rounded hover:bg-yellow transition"
           >
             {showForm ? "Lukk" : "Legg til pasient"}
           </button>
@@ -150,7 +150,7 @@ export default function PasientPage() {
 
             <button
               type="submit"
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+              className="bg-teal text-turquoise px-4 py-2 rounded hover:bg-yellow transition"
             >
               Lagre pasient
             </button>
@@ -160,13 +160,15 @@ export default function PasientPage() {
 
       <MaxWidthWrapper>
         <div className="max-w-3xl mx-auto py-10">
-          <h1 className="text-2xl font-bold">Mine pasienter:</h1>
+          <h1 className="text-2xl font-bold text-neutral_gray">
+            Mine pasienter:
+          </h1>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 
           {loading ? ( // Viser spinner hvis dataene lastes inn
             <div className="flex justify-center items-center mt-10">
-              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-600"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal"></div>
             </div>
           ) : (
             <ul className="mt-4 space-y-4">
@@ -175,14 +177,17 @@ export default function PasientPage() {
                   href={`/admin/pasienter/${pasient._id}`}
                   key={pasient._id}
                 >
-                  <li className="border-2 border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2">
-                    <h2 className="text-lg font-semibold text-red-700">
+                  <li className="border-2 bg-creamy border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2">
+                    <h2 className="text-lg font-semibold text-teal">
                       {pasient.navn}
                     </h2>
                     <p className="font-extralight">Alder: {pasient.alder}</p>
                     <p>
                       Diagnose:{" "}
-                      <span className="font-bold"> {pasient.diagnose}</span>
+                      <span className="font-bold text-neutral_gray">
+                        {" "}
+                        {pasient.diagnose}
+                      </span>
                     </p>
                   </li>
                 </Link>

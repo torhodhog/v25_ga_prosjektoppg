@@ -24,11 +24,14 @@ export default function SettingsPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("https://fysioterapi-backend-production.up.railway.app/api/profil/upload", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+      const res = await fetch(
+        "https://fysioterapi-backend-production.up.railway.app/api/profil/upload",
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: formData,
+        }
+      );
 
       if (!res.ok) throw new Error("Kunne ikke laste opp bilde");
 
@@ -47,21 +50,20 @@ export default function SettingsPage() {
   return (
     <MaxWidthWrapper>
       <div className="max-w-3xl mx-auto py-10 text-center">
-        <h1 className="text-2xl font-bold">Innstillinger</h1>
-        <p className="text-gray-500">Last opp et nytt profilbilde</p>
+        <h1 className="text-2xl text-neutral_gray font-bold">Innstillinger</h1>
+        <p className="text-neutral_gray">Last opp et nytt profilbilde</p>
 
         <input type="file" onChange={handleFileChange} className="mt-4" />
         <button
           onClick={handleUpload}
-          className="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg"
+          className="mt-2 bg-teal text-turquoise px-4 py-2 rounded-lg"
         >
           Last opp bilde
         </button>
 
         {uploadError && <p className="text-red-500 mt-4">{uploadError}</p>}
-        {successMessage && <p className="text-green-500 mt-4">{successMessage}</p>}
+        {successMessage && <p className="text-teal mt-4">{successMessage}</p>}
       </div>
     </MaxWidthWrapper>
   );
 }
-

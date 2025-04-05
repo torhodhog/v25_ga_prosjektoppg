@@ -135,7 +135,7 @@ export default function PasientDetaljer() {
             onChange={(e) => setEditedValue(e.target.value)}
             className="border px-2 py-1 rounded"
           />
-          <button onClick={handleSave} className="ml-2 text-sm text-blue-600">
+          <button onClick={handleSave} className="ml-2 text-sm text-teal">
             Lagre
           </button>
         </>
@@ -176,7 +176,9 @@ export default function PasientDetaljer() {
               return fieldValue;
             })()
           ) : (
-            <span className="italic text-gray-400">Klikk for å legge til</span>
+            <span className="italic text-neutral_gray">
+              Klikk for å legge til
+            </span>
           )}
         </button>
       )}
@@ -185,14 +187,14 @@ export default function PasientDetaljer() {
 
   return (
     <MaxWidthWrapper>
-      <div className="p-8 max-w-3xl mx-auto bg-white rounded-lg">
-        <h1 className="text-2xl font-bold mb-6">
+      <div className="p-8 max-w-3xl mx-auto bg-light rounded-lg">
+        <h1 className="text-2xl font-bold mb-6 text-neutral_gray">
           Pasientdetaljer for {pasient?.navn}:
         </h1>
 
         {pasient ? (
           <>
-            <div className="space-y-4 bg-gray-50 p-6 rounded-lg border-2 border-gray-300 shadow-xl">
+            <div className="space-y-4 bg-creamy p-6 rounded-lg border-2 border-gray-300 shadow-xl text-neutral_gray">
               {renderField("Navn", "navn")}
               {renderField("Alder", "alder")}
               {renderField("Kjønn", "kjønn")}
@@ -225,8 +227,8 @@ export default function PasientDetaljer() {
               </div>
             )}
 
-            <div className="mt-5 bg-white p-6 rounded-lg shadow-xl border-2 border-gray-300">
-              <h2 className="text-xl font-semibold mb-2">
+            <div className="mt-5 bg-creamy p-6 rounded-lg shadow-xl border-2 border-gray-300">
+              <h2 className="text-xl text-neutral_gray font-semibold mb-2">
                 Tidligere rapporter
               </h2>
               {rapporter.length > 0 ? (
@@ -244,7 +246,7 @@ export default function PasientDetaljer() {
                   ))}
                 </ul>
               ) : (
-                <p className="italic text-gray-500">
+                <p className="italic text-neutral_gray">
                   Ingen rapporter registrert.
                 </p>
               )}
