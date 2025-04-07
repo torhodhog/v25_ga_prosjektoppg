@@ -19,6 +19,7 @@
 
 "use client";
 
+import DeletePatientButton from "@/components/DeletePatientButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SmileyIndicator from "@/components/SmileyIndicator";
 import Speedometer from "@/components/Speedometer";
@@ -33,10 +34,11 @@ import {
   Tooltip,
 } from "recharts";
 
-export default function PasientDetaljer() {
+export default function PatientDetailsPage() {
   const { id } = useParams();
 
-  interface Pasient {
+  interface Patient {
+    _id: string;
     navn: string;
     alder: number;
     kjønn: string;
@@ -51,84 +53,64 @@ export default function PasientDetaljer() {
     smertehistorikk: { verdi: number; dato: string }[];
   }
 
-  interface Rapport {
+  interface Report {
     _id: string;
     innhold: string;
     dato: string;
   }
 
-  const [pasient, setPasient] = useState<Pasient | null>(null);
-  const [rapporter, setRapporter] = useState<Rapport[]>([]);
-  const [editableField, setEditableField] = useState<keyof Pasient | null>(
-    null
-  );
+  const [patient, setPatient] = useState<Patient | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [editableField, setEditableField] = useState<keyof Patient | null>(null);
   const [editedValue, setEditedValue] = useState<string | number>("");
 
-  const fetchPasient = async () => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const [patientRes, reportsRes] = await Promise.all([
+        fetch(
+          `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+        fetch(
+          `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
+      ]);
+
+      const patientData = await patientRes.json();
+      const reportsData = await reportsRes.json();
+      setPatient(patientData);
+      setReports(reportsData);
+    };
+
+    fetchData();
+  }, [id]);
+
+  const handleSave = async () => {
+    if (!editableField || !patient) return;
     const token = localStorage.getItem("token");
-    if (!token) return;
 
     const res = await fetch(
       `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
       {
-        headers: { Authorization: `Bearer ${token}` },
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ [editableField]: editedValue }),
       }
     );
 
-    const data = await res.json();
-    setPasient(data);
+    const updated = await res.json();
+    setPatient(updated);
+    setEditableField(null);
   };
 
-  const fetchRapporter = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    try {
-      const res = await fetch(
-        `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const data = await res.json();
-      setRapporter(data);
-    } catch (err) {
-      console.error("Feil ved henting av rapporter:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchPasient();
-    fetchRapporter();
-  }, [id]);
-
-  const handleSave = async () => {
-    if (!editableField || !pasient) return;
-
-    const token = localStorage.getItem("token");
-
-    try {
-      const res = await fetch(
-        `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ [editableField]: editedValue }),
-        }
-      );
-
-      const updated = await res.json();
-      setPasient(updated);
-      setEditableField(null);
-    } catch (err) {
-      console.error("Feil ved oppdatering:", err);
-    }
-  };
-
-  const renderField = (label: string, field: keyof Pasient) => (
+  const renderField = (label: string, field: keyof Patient) => (
     <p>
       <strong>{label}:</strong>{" "}
       {editableField === field ? (
@@ -145,43 +127,20 @@ export default function PasientDetaljer() {
       ) : (
         <button
           onClick={() => {
-            const value = pasient?.[field];
-            if (typeof value === "string" || typeof value === "number") {
-              setEditedValue(value);
-            } else {
-              setEditedValue("");
-            }
+            const value = patient?.[field];
+            setEditedValue(typeof value === "string" || typeof value === "number" ? value : "");
             setEditableField(field);
           }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              const value = pasient?.[field];
-              if (typeof value === "string" || typeof value === "number") {
-                setEditedValue(value);
-              } else {
-                setEditedValue("");
-              }
-              setEditableField(field);
-            }
-          }}
-          className="cursor-pointer hover:underline focus:outline-none focus:ring-2 focus:ring-blue-500 bg-transparent border-none p-0"
+          className="cursor-pointer hover:underline bg-transparent border-none p-0"
         >
-          {pasient?.[field] !== undefined && pasient?.[field] !== "" ? (
-            (() => {
-              const fieldValue = pasient?.[field];
-              if (Array.isArray(fieldValue)) {
-                return (
-                  <span className="italic text-neutral_gray">
-                    Ikke støttet for visning
-                  </span>
-                );
-              }
-              return fieldValue;
-            })()
+          {patient?.[field] !== undefined && patient?.[field] !== "" ? (
+            Array.isArray(patient?.[field]) ? (
+              <span className="italic text-neutral_gray">Ikke visbar</span>
+            ) : (
+              patient?.[field]
+            )
           ) : (
-            <span className="italic text-neutral_gray">
-              Klikk for å legge til
-            </span>
+            <span className="italic text-neutral_gray">Klikk for å legge til</span>
           )}
         </button>
       )}
@@ -190,33 +149,32 @@ export default function PasientDetaljer() {
 
   return (
     <MaxWidthWrapper>
-      <div className="p-8 max-w-5xl mx-auto bg-light rounded-lg">
-        <h1 className="text-2xl font-bold mb-6 text-teal">
-          Pasientdetaljer for {pasient?.navn}:
+      <div className="p-8 max-w-6xl mx-auto bg-gray-50 min-h-screen">
+        <h1 className="text-3xl font-bold mb-10 text-teal">
+          Pasientdetaljer for {patient?.navn}:
         </h1>
 
-        {pasient ? (
-          <>
-            {/* Flex-container for layout */}
-            <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
-              <div className="lg:w-1/4 flex flex-col items-center">
-                {/* SmileyIndicator */}
-                <div className="mb-4">
-                  <SmileyIndicator
-                    verdi={pasient.smertehistorikk.at(-1)?.verdi ?? 0}
-                  />
-                </div>
-
-                <div className="w-full h-80 bg-creamy rounded-lg shadow-md p-4">
-                  <h2 className="font-bold text-center text-neutral_gray">
-                    Sjekkliste for pasienter i alderen {pasient.alder} :
-                  </h2>
-                </div>
+        {patient ? (
+          <div className="grid lg:grid-cols-12 gap-8">
+            {/* Smiley + Sjekkliste */}
+            <div className="lg:col-span-3 space-y-6">
+              <SmileyIndicator verdi={patient.smertehistorikk.at(-1)?.verdi ?? 0} />
+              <div className="bg-white p-4 rounded-xl shadow text-sm border">
+                <h2 className="text-center font-semibold text-gray-600">
+                  Sjekkliste for pasienter i alderen {patient.alder}
+                </h2>
+                <ul className="mt-2 list-disc pl-4 text-gray-500">
+                  <li>Innhent samtykke</li>
+                  <li>Vurder henvisning</li>
+                </ul>
               </div>
+            </div>
 
-              {/* Pasientdetaljer og smerteutvikling i midten */}
-              <div className="lg:w-2/4 space-y-6">
-                <div className="space-y-4 bg-creamy p-6 rounded-lg border-2 border-s shadow-xl text-neutral_gray">
+            {/* Info + graf */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="bg-white p-6 rounded-xl shadow border">
+                <h2 className="text-lg font-semibold text-teal mb-4">Pasientinfo</h2>
+                <div className="space-y-3 text-sm text-gray-700">
                   {renderField("Navn", "navn")}
                   {renderField("Alder", "alder")}
                   {renderField("Kjønn", "kjønn")}
@@ -229,69 +187,61 @@ export default function PasientDetaljer() {
                   {renderField("Henvisende lege", "henvisendeLege")}
                   {renderField("Kommentar", "kommentar")}
                 </div>
-
-                {pasient.smertehistorikk?.length > 0 && (
-                  <div>
-                    <h2 className="text-xl font-semibold mb-2 ">
-                      Smerteutvikling
-                    </h2>
-                    <ResponsiveContainer width="100%" height={300}>
-                      <LineChart
-                        data={pasient.smertehistorikk.map((entry) => ({
-                          ...entry,
-                          dato: new Date(entry.dato).toLocaleDateString(
-                            "no-NO"
-                          ),
-                        }))}
-                      >
-                        <XAxis dataKey="dato" />
-                        <YAxis domain={[0, 10]} />
-                        <Tooltip />
-                        <Line
-                          type="monotone"
-                          dataKey="verdi"
-                          stroke="#ef4444"
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                )}
               </div>
 
-              {/* Speedometer til høyre */}
-              <div className="lg:w-1/4 flex justify-center items-center">
-                <Speedometer
-                  smerteVerdi={pasient.smertehistorikk.at(-1)?.verdi ?? 0}
+              {patient.smertehistorikk?.length > 0 && (
+                <div className="bg-white p-6 rounded-xl shadow border">
+                  <h2 className="text-lg font-semibold text-teal mb-4">Smerteutvikling</h2>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart
+                      data={patient.smertehistorikk.map((entry) => ({
+                        ...entry,
+                        dato: new Date(entry.dato).toLocaleDateString("no-NO"),
+                      }))}
+                    >
+                      <XAxis dataKey="dato" />
+                      <YAxis domain={[0, 10]} />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="verdi" stroke="#ef4444" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
+
+            {/* Speedometer + slett */}
+            <div className="lg:col-span-3 flex flex-col items-center justify-between">
+              <Speedometer smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0} />
+              <div className="mt-6">
+                <DeletePatientButton
+                  patientId={patient._id}
+                  patientName={patient.navn}
+                  redirectAfterDelete={true}
                 />
               </div>
             </div>
 
-            {/* Tidligere rapporter */}
-            <div className="mt-5 bg-creamy p-6 rounded-lg shadow-xl border-2 border-gray-300">
-              <h2 className="text-xl text-neutral_gray font-semibold mb-2">
-                Tidligere rapporter
-              </h2>
-              {rapporter.length > 0 ? (
-                <ul className="space-y-3">
-                  {rapporter.map((rapport) => (
-                    <li
-                      key={rapport._id}
-                      className="border p-4 rounded shadow-sm"
-                    >
-                      <p className="text-sm text-gray-500">
-                        {new Date(rapport.dato).toLocaleDateString("no-NO")}
-                      </p>
-                      <p>{rapport.innhold}</p>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="italic text-neutral_gray">
-                  Ingen rapporter registrert.
-                </p>
-              )}
+            {/* Rapporter */}
+            <div className="lg:col-span-12 mt-10">
+              <div className="bg-white p-6 rounded-xl shadow border">
+                <h2 className="text-lg font-semibold text-teal mb-4">Tidligere rapporter</h2>
+                {reports.length > 0 ? (
+                  <ul className="space-y-3 text-sm text-gray-700">
+                    {reports.map((r) => (
+                      <li key={r._id} className="border p-4 rounded shadow-sm">
+                        <p className="text-sm text-gray-500">
+                          {new Date(r.dato).toLocaleDateString("no-NO")}
+                        </p>
+                        <p>{r.innhold}</p>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="italic text-gray-400">Ingen rapporter registrert.</p>
+                )}
+              </div>
             </div>
-          </>
+          </div>
         ) : (
           <p>Laster pasientinformasjon...</p>
         )}
