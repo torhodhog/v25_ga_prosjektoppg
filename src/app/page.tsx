@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-// import Image from "next/image";
 import Elev8LogoReveal from "@/components/Elev8LogoReveal";
 
 export default function Home() {
