@@ -17,7 +17,7 @@ export default function Elev8LogoReveal() {
 
       {/* ∞ tegnet animert og stilrent */}
       <motion.span
-        className="text-[85px] font-bold -ml-12 -mt-2 text-black drop-shadow-md"
+        className="text-[85px] font-bold -ml-12 -mt-2 text-teal drop-shadow-md"
         initial={{ scale: 1.3, x: -10, opacity: 0 }}
         animate={{ scale: 1, x: 0, opacity: 1 }}
         transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}

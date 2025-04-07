@@ -30,22 +30,22 @@ export function SidebarDemo({ user }: SidebarProps) {
     {
       label: "Dashboard",
       href: "/admin",
-      icon: <IconBrandTabler className="text-teal h-5 w-5 shrink-0" />,
+      icon: <IconBrandTabler className="text-light h-5 w-5 shrink-0" />,
     },
     {
       label: "Profil",
       href: "/admin/profile",
-      icon: <IconUserBolt className="text-teal h-5 w-5 shrink-0" />,
+      icon: <IconUserBolt className="text-light h-5 w-5 shrink-0" />,
     },
     {
       label: "Pasienter",
       href: "/admin/pasienter",
-      icon: <FaPeopleArrows className="text-teal h-5 w-5 shrink-0" />,
+      icon: <FaPeopleArrows className="text-light h-5 w-5 shrink-0" />,
     },
     {
       label: "Innstillinger",
       href: "/admin/settings",
-      icon: <IconSettings className="text-teal h-5 w-5 shrink-0" />,
+      icon: <IconSettings className="text-light h-5 w-5 shrink-0" />,
     },
   ];
 
@@ -66,7 +66,7 @@ export function SidebarDemo({ user }: SidebarProps) {
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 p-2 w-full text-left text-teal hover:bg-yellow rounded-md"
+              className="flex items-center gap-2 p-2 w-full text-left text-light hover:bg-light_teal rounded-md"
             >
               <IconArrowLeft className="h-5 w-5  shrink-0" />
               <span>Logg ut</span>

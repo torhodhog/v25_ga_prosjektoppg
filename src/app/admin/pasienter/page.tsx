@@ -161,9 +161,7 @@ export default function PasientPage() {
 
       <MaxWidthWrapper>
         <div className="max-w-3xl mx-auto py-10">
-          <h1 className="text-2xl font-bold text-neutral_gray">
-            Mine pasienter:
-          </h1>
+          <h1 className="text-2xl font-bold text-teal">Mine pasienter:</h1>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 

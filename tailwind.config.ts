@@ -18,6 +18,7 @@ export default {
         neutral_gray: "#4A4A4A",
         light: "#EDEAE5",
         teal: "#026670",
+        light_teal: "#10747E",
         turquoise: "#9FEDD7",
         yellow: "#FCE181",
         coral: "#F28B82",
