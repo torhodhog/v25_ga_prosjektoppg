@@ -28,6 +28,7 @@ interface Pasient {
   navn: string;
   alder: number;
   diagnose: string;
+  smertehistorikk?: { verdi: number; dato: string }[]; // Nytt!
 }
 
 export default function PasientPage() {
@@ -172,26 +173,55 @@ export default function PasientPage() {
             </div>
           ) : (
             <ul className="mt-4 space-y-4">
-              {pasienter.map((pasient) => (
-                <Link
-                  href={`/admin/pasienter/${pasient._id}`}
-                  key={pasient._id}
-                >
-                  <li className="border-2 bg-creamy border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2">
-                    <h2 className="text-lg font-semibold text-teal">
-                      {pasient.navn}
-                    </h2>
-                    <p className="font-extralight">Alder: {pasient.alder}</p>
-                    <p>
-                      Diagnose:{" "}
-                      <span className="font-bold text-neutral_gray">
-                        {" "}
-                        {pasient.diagnose}
-                      </span>
-                    </p>
-                  </li>
-                </Link>
-              ))}
+              {pasienter.map((pasient) => {
+                const sisteVerdi = pasient.smertehistorikk?.at(-1)?.verdi;
+
+                return (
+                  <Link
+                    href={`/admin/pasienter/${pasient._id}`}
+                    key={pasient._id}
+                  >
+                    <li className="border-2 bg-creamy border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2 flex justify-between items-center">
+                      <div>
+                        <h2 className="text-lg font-semibold text-teal">
+                          {pasient.navn}
+                        </h2>
+                        <p className="font-extralight">
+                          Alder: {pasient.alder}
+                        </p>
+                        <p>
+                          Diagnose:{" "}
+                          <span className="font-bold text-neutral_gray">
+                            {pasient.diagnose}
+                          </span>
+                        </p>
+                      </div>
+
+                      {/* Farget dott */}
+                      <div
+                        className={`w-6 h-6 rounded-full ${
+                          sisteVerdi == null
+                            ? "bg-gray-400" // Ikke meldt inn smerte
+                            : sisteVerdi <= 2
+                            ? "bg-red-600"
+                            : sisteVerdi <= 4
+                            ? "bg-orange-500"
+                            : sisteVerdi <= 6
+                            ? "bg-yellow-400"
+                            : sisteVerdi <= 8
+                            ? "bg-lime-500"
+                            : "bg-green-500"
+                        }`}
+                        title={
+                          sisteVerdi == null
+                            ? "Ingen smerteregistrering"
+                            : `Siste smerteverdi: ${sisteVerdi}`
+                        }
+                      ></div>
+                    </li>
+                  </Link>
+                );
+              })}
             </ul>
           )}
 

@@ -19,6 +19,8 @@
 
 "use client";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import SmileyIndicator from "@/components/SmileyIndicator";
+import Speedometer from "@/components/Speedometer";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -186,47 +188,71 @@ export default function PasientDetaljer() {
   );
 
   return (
-    <MaxWidthWrapper>
-      <div className="p-8 max-w-3xl mx-auto bg-light rounded-lg">
+        <MaxWidthWrapper>
+      <div className="p-8 max-w-5xl mx-auto bg-light rounded-lg">
         <h1 className="text-2xl font-bold mb-6 text-neutral_gray">
           Pasientdetaljer for {pasient?.navn}:
         </h1>
-
+    
         {pasient ? (
           <>
-            <div className="space-y-4 bg-creamy p-6 rounded-lg border-2 border-gray-300 shadow-xl text-neutral_gray">
-              {renderField("Navn", "navn")}
-              {renderField("Alder", "alder")}
-              {renderField("Kjønn", "kjønn")}
-              {renderField("Adresse", "adresse")}
-              {renderField("Telefon", "telefon")}
-              {renderField("E-post", "epost")}
-              {renderField("Diagnose", "diagnose")}
-              {renderField("Smerterate ved første møte", "smerterate")}
-              {renderField("Fremgang", "fremgang")}
-              {renderField("Henvisende lege", "henvisendeLege")}
-              {renderField("Kommentar", "kommentar")}
-            </div>
-
-            {pasient.smertehistorikk?.length > 0 && (
-              <div className="mt-10">
-                <h2 className="text-xl font-semibold mb-2">Smerteutvikling</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart
-                    data={pasient.smertehistorikk.map((entry) => ({
-                      ...entry,
-                      dato: new Date(entry.dato).toLocaleDateString("no-NO"),
-                    }))}
-                  >
-                    <XAxis dataKey="dato" />
-                    <YAxis domain={[0, 10]} />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="verdi" stroke="#ef4444" />
-                  </LineChart>
-                </ResponsiveContainer>
+            {/* Flex-container for layout */}
+                        <div className="flex flex-col lg:flex-row lg:justify-between gap-8">
+           
+              <div className="lg:w-1/4 flex flex-col items-center">
+                {/* SmileyIndicator */}
+                <div className="mb-4">
+                  <SmileyIndicator verdi={pasient.smertehistorikk.at(-1)?.verdi ?? 0} />
+                </div>
+                
+                <div className="w-full h-80 bg-creamy rounded-lg shadow-md p-4">
+                  <h2 className="font-bold text-center">Sjekkliste for pasienter i alderen {pasient.alder} :</h2>
+                </div>
               </div>
-            )}
-
+            
+              {/* Pasientdetaljer og smerteutvikling i midten */}
+              <div className="lg:w-2/4 space-y-6">
+                <div className="space-y-4 bg-creamy p-6 rounded-lg border-2 border-gray-300 shadow-xl text-neutral_gray">
+                  {renderField("Navn", "navn")}
+                  {renderField("Alder", "alder")}
+                  {renderField("Kjønn", "kjønn")}
+                  {renderField("Adresse", "adresse")}
+                  {renderField("Telefon", "telefon")}
+                  {renderField("E-post", "epost")}
+                  {renderField("Diagnose", "diagnose")}
+                  {renderField("Smerterate ved første møte", "smerterate")}
+                  {renderField("Fremgang", "fremgang")}
+                  {renderField("Henvisende lege", "henvisendeLege")}
+                  {renderField("Kommentar", "kommentar")}
+                </div>
+            
+                {pasient.smertehistorikk?.length > 0 && (
+                  <div>
+                    <h2 className="text-xl font-semibold mb-2">Smerteutvikling</h2>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart
+                        data={pasient.smertehistorikk.map((entry) => ({
+                          ...entry,
+                          dato: new Date(entry.dato).toLocaleDateString("no-NO"),
+                        }))}
+                      >
+                        <XAxis dataKey="dato" />
+                        <YAxis domain={[0, 10]} />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="verdi" stroke="#ef4444" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                )}
+              </div>
+            
+              {/* Speedometer til høyre */}
+              <div className="lg:w-1/4 flex justify-center items-center">
+                <Speedometer smerteVerdi={pasient.smertehistorikk.at(-1)?.verdi ?? 0} />
+              </div>
+            </div>
+    
+            {/* Tidligere rapporter */}
             <div className="mt-5 bg-creamy p-6 rounded-lg shadow-xl border-2 border-gray-300">
               <h2 className="text-xl text-neutral_gray font-semibold mb-2">
                 Tidligere rapporter
