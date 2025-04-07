@@ -190,7 +190,7 @@ export default function PasientDetaljer() {
   return (
     <MaxWidthWrapper>
       <div className="p-8 max-w-5xl mx-auto bg-light rounded-lg">
-        <h1 className="text-2xl font-bold mb-6 text-neutral_gray">
+        <h1 className="text-2xl font-bold mb-6 text-teal">
           Pasientdetaljer for {pasient?.navn}:
         </h1>
 

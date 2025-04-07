@@ -31,7 +31,7 @@ const GridComponent = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-x-32 gap-y-16 w-full max-w-4xl">
         {gridItems.map((item) => (
           <Link key={item.id} href={item.href}>
-            <div className="bg-teal rounded-lg h-40 w-full flex flex-col items-center justify-center text-white text-2xl font-semibold shadow-lg transition-transform transform hover:scale-105 hover:bg-yellow cursor-pointer">
+            <div className="bg-teal rounded-lg h-40 w-full flex flex-col items-center justify-center text-white text-2xl font-semibold shadow-lg transition-transform transform hover:scale-105 hover:bg-light_teal cursor-pointer">
               {item.icon}
               <p className="mt-3 text-lg">{item.title}</p>
             </div>

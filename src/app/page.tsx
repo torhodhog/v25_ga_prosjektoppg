@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
@@ -13,11 +13,14 @@ export default function Home() {
   const handleLogin = async () => {
     setError("");
     try {
-      const res = await fetch("https://fysioterapi-backend-production.up.railway.app/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ epost: username, passord: password }),
-      });
+      const res = await fetch(
+        "https://fysioterapi-backend-production.up.railway.app/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ epost: username, passord: password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -25,8 +28,8 @@ export default function Home() {
         throw new Error(data.message || "Innlogging feilet");
       }
 
-      localStorage.setItem("token", data.token); 
-      window.location.href = "/admin"; 
+      localStorage.setItem("token", data.token);
+      window.location.href = "/admin";
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -61,7 +64,10 @@ export default function Home() {
             }}
           >
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="username"
+              >
                 Brukernavn (E-post)
               </label>
               <input
@@ -74,7 +80,10 @@ export default function Home() {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="password"
+              >
                 Passord
               </label>
               <input
@@ -89,7 +98,7 @@ export default function Home() {
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
             <div className="flex items-center justify-between">
               <button
-                className="bg-red-600 hover:bg-red-700 text-white mx-auto font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-teal hover:bg-light_teal text-white mx-auto font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
                 Logg inn
