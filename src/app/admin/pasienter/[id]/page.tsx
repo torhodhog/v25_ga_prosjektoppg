@@ -18,6 +18,7 @@
  */
 
 "use client";
+
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SmileyIndicator from "@/components/SmileyIndicator";
 import Speedometer from "@/components/Speedometer";
