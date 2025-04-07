@@ -12,7 +12,7 @@ interface Props {
 
 export default function DeletePatientButton({
   patientId,
-  
+
   redirectAfterDelete = false,
   onDeleted,
 }: Props) {
@@ -64,7 +64,7 @@ export default function DeletePatientButton({
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="text-red-600 hover:text-red-900 text-sm bg-gray-300 p-4 rounded-sm"
+        className="bg-light_teal text-light hover:bg-coral text-sm p-4 rounded-sm"
       >
         Slett pasient
       </button>

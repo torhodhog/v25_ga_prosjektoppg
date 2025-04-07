@@ -61,7 +61,9 @@ export default function PatientDetailsPage() {
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
-  const [editableField, setEditableField] = useState<keyof Patient | null>(null);
+  const [editableField, setEditableField] = useState<keyof Patient | null>(
+    null
+  );
   const [editedValue, setEditedValue] = useState<string | number>("");
 
   useEffect(() => {
@@ -128,7 +130,11 @@ export default function PatientDetailsPage() {
         <button
           onClick={() => {
             const value = patient?.[field];
-            setEditedValue(typeof value === "string" || typeof value === "number" ? value : "");
+            setEditedValue(
+              typeof value === "string" || typeof value === "number"
+                ? value
+                : ""
+            );
             setEditableField(field);
           }}
           className="cursor-pointer hover:underline bg-transparent border-none p-0"
@@ -140,7 +146,9 @@ export default function PatientDetailsPage() {
               patient?.[field]
             )
           ) : (
-            <span className="italic text-neutral_gray">Klikk for å legge til</span>
+            <span className="italic text-neutral_gray">
+              Klikk for å legge til
+            </span>
           )}
         </button>
       )}
@@ -149,7 +157,7 @@ export default function PatientDetailsPage() {
 
   return (
     <MaxWidthWrapper>
-      <div className="p-8 max-w-6xl mx-auto bg-gray-50 min-h-screen">
+      <div className="p-8 max-w-6xl mx-auto bg-light min-h-screen">
         <h1 className="text-3xl font-bold mb-10 text-teal">
           Pasientdetaljer for {patient?.navn}:
         </h1>
@@ -158,7 +166,9 @@ export default function PatientDetailsPage() {
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Smiley + Sjekkliste */}
             <div className="lg:col-span-3 space-y-6">
-              <SmileyIndicator verdi={patient.smertehistorikk.at(-1)?.verdi ?? 0} />
+              <SmileyIndicator
+                verdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
+              />
               <div className="bg-white p-4 rounded-xl shadow text-sm border">
                 <h2 className="text-center font-semibold text-gray-600">
                   Sjekkliste for pasienter i alderen {patient.alder}
@@ -173,7 +183,9 @@ export default function PatientDetailsPage() {
             {/* Info + graf */}
             <div className="lg:col-span-6 space-y-6">
               <div className="bg-white p-6 rounded-xl shadow border">
-                <h2 className="text-lg font-semibold text-teal mb-4">Pasientinfo</h2>
+                <h2 className="text-lg font-semibold text-teal mb-4">
+                  Pasientinfo
+                </h2>
                 <div className="space-y-3 text-sm text-gray-700">
                   {renderField("Navn", "navn")}
                   {renderField("Alder", "alder")}
@@ -191,7 +203,9 @@ export default function PatientDetailsPage() {
 
               {patient.smertehistorikk?.length > 0 && (
                 <div className="bg-white p-6 rounded-xl shadow border">
-                  <h2 className="text-lg font-semibold text-teal mb-4">Smerteutvikling</h2>
+                  <h2 className="text-lg font-semibold text-teal mb-4">
+                    Smerteutvikling
+                  </h2>
                   <ResponsiveContainer width="100%" height={250}>
                     <LineChart
                       data={patient.smertehistorikk.map((entry) => ({
@@ -211,7 +225,9 @@ export default function PatientDetailsPage() {
 
             {/* Speedometer + slett */}
             <div className="lg:col-span-3 flex flex-col items-center justify-between">
-              <Speedometer smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0} />
+              <Speedometer
+                smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
+              />
               <div className="mt-6">
                 <DeletePatientButton
                   patientId={patient._id}
@@ -224,7 +240,9 @@ export default function PatientDetailsPage() {
             {/* Rapporter */}
             <div className="lg:col-span-12 mt-10">
               <div className="bg-white p-6 rounded-xl shadow border">
-                <h2 className="text-lg font-semibold text-teal mb-4">Tidligere rapporter</h2>
+                <h2 className="text-lg font-semibold text-teal mb-4">
+                  Tidligere rapporter
+                </h2>
                 {reports.length > 0 ? (
                   <ul className="space-y-3 text-sm text-gray-700">
                     {reports.map((r) => (
@@ -237,7 +255,9 @@ export default function PatientDetailsPage() {
                     ))}
                   </ul>
                 ) : (
-                  <p className="italic text-gray-400">Ingen rapporter registrert.</p>
+                  <p className="italic text-gray-400">
+                    Ingen rapporter registrert.
+                  </p>
                 )}
               </div>
             </div>
