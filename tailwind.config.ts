@@ -22,6 +22,7 @@ export default {
         yellow: "#FCE181",
         coral: "#F28B82",
         peach: "#FBC687",
+        green: "#81C995",
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",

@@ -82,7 +82,7 @@ export function SidebarDemo({ user }: SidebarProps) {
               height={50}
               alt="Avatar"
             />
-            <span className="text-neutral-700 dark:text-neutral-200 text-sm">
+            <span className="text-neutral_gray dark:text-neutral_gray text-sm">
               {user ? user.navn : "Ukjent bruker"}
             </span>
           </div>

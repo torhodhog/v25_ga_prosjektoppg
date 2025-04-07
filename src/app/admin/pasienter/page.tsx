@@ -201,15 +201,15 @@ export default function PasientPage() {
                       <div
                         className={`w-6 h-6 rounded-full ${
                           sisteVerdi == null
-                            ? "bg-gray-400" // Ikke meldt inn smerte
+                            ? "bg-light" // Ikke meldt inn smerte
                             : sisteVerdi <= 2
-                            ? "bg-red-600"
+                            ? "bg-coral"
                             : sisteVerdi <= 4
-                            ? "bg-orange-500"
+                            ? "bg-peach"
                             : sisteVerdi <= 6
-                            ? "bg-yellow-400"
+                            ? "bg-yellow"
                             : sisteVerdi <= 8
-                            ? "bg-lime-500"
+                            ? "bg-green"
                             : "bg-green-500"
                         }`}
                         title={
