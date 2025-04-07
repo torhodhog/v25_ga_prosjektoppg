@@ -56,7 +56,7 @@ export default function Home() {
         <div className="py-20 mx-auto text-center flex flex-col items-center max-w-3xl">
           <Elev8LogoReveal />
           <form
-            className="mt-8 w-full max-w-sm bg-white/80 p-6 rounded shadow-lg"
+            className="mt-8 w-full max-w-sm bg-light/80 p-6 rounded shadow-lg"
             onSubmit={(e) => {
               e.preventDefault();
               handleLogin();
@@ -64,7 +64,7 @@ export default function Home() {
           >
             <div className="mb-4">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-neutral_gray text-sm font-bold mb-2"
                 htmlFor="username"
               >
                 Brukernavn (E-post)
@@ -80,7 +80,7 @@ export default function Home() {
             </div>
             <div className="mb-6">
               <label
-                className="block text-gray-700 text-sm font-bold mb-2"
+                className="block text-neutral_gray text-sm font-bold mb-2"
                 htmlFor="password"
               >
                 Passord
@@ -94,7 +94,7 @@ export default function Home() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+            {error && <p className="text-coral text-sm mb-4">{error}</p>}
             <div className="flex items-center justify-between">
               <button
                 className="bg-teal hover:bg-light_teal text-white mx-auto font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
