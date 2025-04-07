@@ -74,7 +74,7 @@ export default function NyRapportPage() {
           <select
             value={valgtPasientId}
             onChange={(e) => setValgtPasientId(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2"
+            className="w-full border border-gray-300 rounded px-3 py-2 text-neutral_gray"
           >
             <option value="">-- Velg pasient --</option>
             {pasienter.map((p) => (
@@ -101,7 +101,7 @@ export default function NyRapportPage() {
         {/* Rapportinnhold */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold mb-1">
+            <label className="block text-sm font-semibold mb-1 text-neutral_gray">
               🩺 Symptomer
             </label>
             <textarea
@@ -114,7 +114,7 @@ export default function NyRapportPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">
+            <label className="block text-sm font-semibold mb-1 text-neutral_gray">
               👁 Observasjoner
             </label>
             <textarea
@@ -125,7 +125,7 @@ export default function NyRapportPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold mb-1">
+            <label className="block text-sm font-semibold mb-1 text-neutral_gray">
               ✅ Tiltak / Anbefalinger
             </label>
             <textarea
@@ -147,8 +147,8 @@ export default function NyRapportPage() {
         </div>
 
         {/* Tilbakemeldinger */}
-        {success && <p className="text-green-600 text-center">{success}</p>}
-        {error && <p className="text-red-600 text-center">{error}</p>}
+        {success && <p className="text-green text-center">{success}</p>}
+        {error && <p className="text-coral text-center">{error}</p>}
       </div>
     </MaxWidthWrapper>
   );
