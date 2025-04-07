@@ -151,7 +151,7 @@ export default function PasientPage() {
 
             <button
               type="submit"
-              className="bg-teal text-turquoise px-4 py-2 rounded hover:bg-yellow transition"
+              className="bg-teal text-light px-4 py-2 rounded hover:bg-light_teal transition"
             >
               Lagre pasient
             </button>

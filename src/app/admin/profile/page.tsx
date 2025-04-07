@@ -37,7 +37,7 @@ export default function ProfilePage() {
 
   return (
     <MaxWidthWrapper>
-      <div className="max-w-3xl text-neutral_gray mx-auto py-10 text-center">
+      <div className="max-w-3xl text-teal mx-auto py-10 text-center">
         <h1 className="text-2xl font-bold">Min Profil</h1>
 
         {error && <p className="text-red-500">{error}</p>}
@@ -52,7 +52,7 @@ export default function ProfilePage() {
               />
             )}
             <h2 className="text-lg font-semibold">{user.navn}</h2>
-            <p className="text-neutral_gray">
+            <p className="text-coral">
               {user.klinikk || "Ingen klinikk registrert"}
             </p>
           </div>
