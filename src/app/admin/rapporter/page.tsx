@@ -99,7 +99,8 @@ export default function NyRapportPage() {
                 {pasienter.find((p) => p._id === valgtPasientId)?.navn}
               </p>
               <p className="text-sm text-gray-500">
-                📅 <strong>Dato:</strong> {new Date().toLocaleDateString("no-NO")}
+                📅 <strong>Dato:</strong>{" "}
+                {new Date().toLocaleDateString("no-NO")}
               </p>
             </div>
           )}
@@ -150,7 +151,7 @@ export default function NyRapportPage() {
           <div className="pt-4">
             <button
               onClick={sendRapport}
-              className="bg-coral hover:bg-peach transition text-white px-6 py-2 rounded font-semibold w-full"
+              className="bg-teal hover:bg-light_teal transition text-white px-6 py-2 rounded font-semibold w-full"
             >
               📤 Send rapport
             </button>
@@ -161,20 +162,21 @@ export default function NyRapportPage() {
         </div>
 
         {valgtPasientId && (
-  <div className="lg:w-1/3 self-stretch">
-    <div className="h-full min-h-[1400px]"> {/* eller høyere hvis ønskelig */}
-      <AIReportHelper
-        patientId={valgtPasientId}
-        onSaved={() => setSuccess("Rapport sendt via AI!")}
-        onFillFields={({ rapport, forslag }) => {
-          setSymptomer(rapport);
-          setTiltak(forslag);
-        }}
-      />
-    </div>
-  </div>
-)}
-
+          <div className="lg:w-1/3 self-stretch">
+            <div className="h-full min-h-[1400px]">
+              {" "}
+              {/* eller høyere hvis ønskelig */}
+              <AIReportHelper
+                patientId={valgtPasientId}
+                onSaved={() => setSuccess("Rapport sendt via AI!")}
+                onFillFields={({ rapport, forslag }) => {
+                  setSymptomer(rapport);
+                  setTiltak(forslag);
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </MaxWidthWrapper>
   );
