@@ -24,8 +24,10 @@ import DeleteReportButton from "@/components/DeleteReportButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SmileyIndicator from "@/components/SmileyIndicator";
 import Speedometer from "@/components/Speedometer";
+
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   ResponsiveContainer,
   LineChart,
@@ -236,6 +238,11 @@ export default function PatientDetailsPage() {
                   patientName={patient.navn}
                   redirectAfterDelete={true}
                 />
+                <Link href="/admin/rapporter">
+                <button className="bg-slate-500 ml-2 rounded-md px-2 py-3">
+                Lag ny rapport
+                </button>
+                </Link>
               </div>
             </div>
 

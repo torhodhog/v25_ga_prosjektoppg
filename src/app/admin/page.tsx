@@ -42,7 +42,7 @@ export default function AdminPage() {
         Tilgang kun for <br></br> <span className="font-extrabold text-black text-2xl">{terapeut?.navn ?? "innlogget bruker"}</span>
       </h1>
       <GridComponent />
-      {/* <ChatbotButton /> */}
+   
     </div>
   );
 }
