@@ -52,7 +52,7 @@ export function SidebarDemo({ user }: SidebarProps) {
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-neutral_gray h-screen"
+        "fixed top-0 left-0 h-screen w-64  flex flex-col"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
@@ -74,6 +74,7 @@ export function SidebarDemo({ user }: SidebarProps) {
           </div>
 
           {/* Brukerinformasjon */}
+                    {/* Brukerinformasjon */}
           <div className="flex items-center gap-2 p-4">
             <Image
               src="/doctor.png"
@@ -82,9 +83,11 @@ export function SidebarDemo({ user }: SidebarProps) {
               height={50}
               alt="Avatar"
             />
-            <span className="text-neutral_gray dark:text-neutral_gray text-sm">
-              {user ? user.navn : "Ukjent bruker"}
-            </span>
+            {open && (
+              <span className="text-white dark:text-white text-sm">
+                {user ? user.navn : "Ukjent bruker"}
+              </span>
+            )}
           </div>
         </SidebarBody>
       </Sidebar>

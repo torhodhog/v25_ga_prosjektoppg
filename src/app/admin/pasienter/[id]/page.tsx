@@ -66,6 +66,7 @@ export default function PatientDetailsPage() {
     null
   );
   const [editedValue, setEditedValue] = useState<string | number>("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -244,33 +245,70 @@ export default function PatientDetailsPage() {
                 <h2 className="text-lg font-semibold text-teal mb-4">
                   Tidligere rapporter
                 </h2>
-                {reports.length > 0 ? (
-  <ul className="space-y-3 text-sm text-gray-700">
-    {reports.map((r) => (
-      <li key={r._id} className="border p-4 rounded shadow-sm">
-        <div className="flex justify-between">
-          <div>
-            <p className="text-sm text-gray-500">
-              {new Date(r.dato).toLocaleDateString("no-NO")}
-            </p>
-            <p>{r.innhold}</p>
-          </div>
-          <DeleteReportButton
-            reportId={r._id}
-            onDeleted={() =>
-              setReports((prev) => prev.filter((rep) => rep._id !== r._id))
-            }
-          />
-        </div>
-      </li>
-    ))}
-  </ul>
-) : (
-  <p className="italic text-gray-400">Ingen rapporter registrert.</p>
-)}
 
+                {reports.length > 0 ? (
+                  <ul className="space-y-3 text-sm text-gray-700">
+                    {reports.map((r) => {
+                      const [symptomer, observasjoner, tiltak] =
+                        r.innhold.split("\n\n");
+                      // 👈 inni map gir feil, så flytt ut om nødvendig
+
+                      return (
+                        <li
+                          key={r._id}
+                          className="border p-4 rounded shadow-sm bg-white hover:bg-gray-50 transition cursor-pointer"
+                          onClick={() => setOpen((prev) => !prev)}
+                        >
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="text-sm text-gray-500 font-medium">
+                                {new Date(r.dato).toLocaleDateString("no-NO")}
+                              </p>
+
+                              {!open ? (
+                                <p className="mt-1 text-gray-500 italic truncate">
+                                  {r.innhold.slice(0, 80)}...
+                                </p>
+                              ) : (
+                                <div className="mt-2 space-y-2 whitespace-pre-line">
+                                  <p>
+                                    <strong>🩺 Symptomer:</strong>
+                                    <br />
+                                    {symptomer || "Ikke spesifisert"}
+                                  </p>
+                                  <p>
+                                    <strong>👁 Observasjoner:</strong>
+                                    <br />
+                                    {observasjoner || "Ikke spesifisert"}
+                                  </p>
+                                  <p>
+                                    <strong>✅ Tiltak:</strong>
+                                    <br />
+                                    {tiltak || "Ikke spesifisert"}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+
+                            <DeleteReportButton
+                              reportId={r._id}
+                              onDeleted={() =>
+                                setReports((prev) =>
+                                  prev.filter((rep) => rep._id !== r._id)
+                                )
+                              }
+                            />
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="italic text-gray-400">
+                    Ingen rapporter registrert.
+                  </p>
+                )}
               </div>
-            
             </div>
           </div>
         ) : (
