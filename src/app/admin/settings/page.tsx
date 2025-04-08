@@ -1,69 +1,110 @@
 "use client";
-import { useState } from "react";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 
-export default function SettingsPage() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [uploadError, setUploadError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+import { useEffect, useState } from "react";
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFile(e.target.files[0]);
+const fontSizes = [
+  { label: "Liten", value: "14px" },
+  { label: "Normal", value: "16px" },
+  { label: "Stor", value: "18px" },
+  { label: "Ekstra stor", value: "20px" },
+];
+
+const themeColors = [
+  { label: "Teal", value: "180 98% 20%" },
+  { label: "Koral", value: "12 76% 61%" },
+  { label: "Lilla", value: "280 65% 60%" },
+];
+
+export default function SettingsControls() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [fontSize, setFontSize] = useState("16px");
+  const [primaryColor, setPrimaryColor] = useState("180 98% 20%");
+
+  useEffect(() => {
+    const storedTheme = localStorage.getItem("theme");
+    const storedSize = localStorage.getItem("fontSize");
+    const storedColor = localStorage.getItem("primaryColor");
+
+    if (storedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+      setDarkMode(true);
     }
+    if (storedSize) {
+      document.documentElement.style.setProperty("--font-size", storedSize);
+      setFontSize(storedSize);
+    }
+    if (storedColor) {
+      document.documentElement.style.setProperty("--primary", storedColor);
+      setPrimaryColor(storedColor);
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", newMode);
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Velg et bilde først!");
-      return;
-    }
+  const changeFontSize = (size: string) => {
+    setFontSize(size);
+    localStorage.setItem("fontSize", size);
+    document.documentElement.style.setProperty("--base-font-size", size);
 
-    const formData = new FormData();
-    formData.append("image", selectedFile);
+  };
 
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch(
-        "https://fysioterapi-backend-production.up.railway.app/api/profil/upload",
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        }
-      );
-
-      if (!res.ok) throw new Error("Kunne ikke laste opp bilde");
-
-      const data = await res.json();
-      setSuccessMessage("Profilbilde oppdatert!");
-      setUploadError(null);
-
-      // Lagre bildet lokalt for rask oppdatering
-      localStorage.setItem("profileImage", data.bildeUrl);
-    } catch (error) {
-      console.error("Feil ved bildeopplasting:", error);
-      setUploadError("Noe gikk galt. Prøv igjen.");
-    }
+  const changeColor = (color: string) => {
+    setPrimaryColor(color);
+    localStorage.setItem("primaryColor", color);
+    document.documentElement.style.setProperty("--primary", color);
   };
 
   return (
-    <MaxWidthWrapper>
-      <div className="max-w-3xl mx-auto py-10 text-center">
-        <h1 className="text-2xl text-neutral_gray font-bold">Innstillinger</h1>
-        <p className="text-neutral_gray">Last opp et nytt profilbilde</p>
-
-        <input type="file" onChange={handleFileChange} className="mt-4" />
+    <div className="space-y-6 text-left max-w-xl mx-auto mt-10">
+      <div>
+        <label className="block mb-1 font-semibold">Tema:</label>
         <button
-          onClick={handleUpload}
-          className="mt-2 bg-teal text-turquoise px-4 py-2 rounded-lg"
+          onClick={toggleDarkMode}
+          className="bg-teal text-white px-4 py-2 rounded shadow"
         >
-          Last opp bilde
+          {darkMode ? "Bytt til lyst tema" : "Bytt til mørkt tema"}
         </button>
-
-        {uploadError && <p className="text-red-500 mt-4">{uploadError}</p>}
-        {successMessage && <p className="text-teal mt-4">{successMessage}</p>}
       </div>
-    </MaxWidthWrapper>
+
+      <div>
+        <label className="block mb-1 font-semibold">Tekststørrelse:</label>
+        <div className="flex flex-wrap gap-2">
+          {fontSizes.map((size) => (
+            <button
+              key={size.value}
+              onClick={() => changeFontSize(size.value)}
+              className={`px-4 py-1 border rounded ${
+                fontSize === size.value ? "bg-teal text-white" : "bg-white"
+              }`}
+            >
+              {size.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block mb-1 font-semibold">Primærfarge:</label>
+        <div className="flex flex-wrap gap-2">
+          {themeColors.map((c) => (
+            <button
+              key={c.value}
+              onClick={() => changeColor(c.value)}
+              className={`px-4 py-1 border rounded ${
+                primaryColor === c.value ? "bg-teal text-white" : "bg-white"
+              }`}
+              style={{ borderColor: `hsl(${c.value})` }}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
