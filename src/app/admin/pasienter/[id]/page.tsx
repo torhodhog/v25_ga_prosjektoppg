@@ -256,8 +256,8 @@ export default function PatientDetailsPage() {
                   redirectAfterDelete={true}
                 />
                 <Link href="/admin/rapporter">
-                  <button className="bg-slate-500 ml-2 rounded-md px-2 py-3">
-                    Lag ny rapport
+                  <button className="bg-light_teal text-white ml-2 rounded-md px-2 py-3">
+                    Lag ny rapport 📝
                   </button>
                 </Link>
               </div>

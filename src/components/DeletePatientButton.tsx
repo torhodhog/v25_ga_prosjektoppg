@@ -64,9 +64,9 @@ export default function DeletePatientButton({
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="text-red-600 hover:text-red-900 text-sm bg-gray-300 p-4 rounded-sm"
+        className="text-black hover:text-red-900 text-sm bg-peach p-4 pr-6  ml-2 mb-2 rounded-sm"
       >
-        Slett pasient
+        Slett pasient 🗑️
       </button>
 
       {showModal && (
