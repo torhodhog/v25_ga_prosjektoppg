@@ -34,7 +34,7 @@ interface Pasient {
 export default function PasientPage() {
   const [pasienter, setPasienter] = useState<Pasient[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); 
+  const [loading, setLoading] = useState<boolean>(true);
   const [navn, setNavn] = useState<string>("");
   const [alder, setAlder] = useState<string>("");
   const [diagnose, setDiagnose] = useState<string>("");
@@ -64,7 +64,7 @@ export default function PasientPage() {
       } catch (error) {
         setError(error instanceof Error ? error.message : "Ukjent feil");
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -77,7 +77,7 @@ export default function PasientPage() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setShowForm(!showForm)}
-            className="text-sm text-turquoise bg-teal px-4 py-2 ml-24 rounded hover:bg-yellow transition"
+            className="text-sm text-light bg-teal px-4 py-2 ml-24 rounded hover:bg-light_teal transition"
           >
             {showForm ? "Lukk" : "Legg til pasient"}
           </button>
@@ -179,19 +179,17 @@ export default function PasientPage() {
                     href={`/admin/pasienter/${pasient._id}`}
                     key={pasient._id}
                   >
-                    <li className="border-2 bg-creamy border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2 flex justify-between items-center">
+                    <li className="border-2 bg-teal border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2 flex justify-between items-center">
                       <div>
-                        <h2 className="text-lg font-semibold text-teal">
+                        <h2 className="text-lg font-semibold text-light">
                           {pasient.navn}
                         </h2>
-                        <p className="font-extralight">
+                        <p className="font-extralight text-light">
                           Alder: {pasient.alder}
                         </p>
-                        <p>
+                        <p className="text-light">
                           Diagnose:{" "}
-                          <span className="font-bold text-neutral_gray">
-                            {pasient.diagnose}
-                          </span>
+                          <span className="font-bold">{pasient.diagnose}</span>
                         </p>
                       </div>
 
@@ -199,7 +197,7 @@ export default function PasientPage() {
                       <div
                         className={`w-6 h-6 rounded-full ${
                           sisteVerdi == null
-                            ? "bg-light" 
+                            ? "bg-light"
                             : sisteVerdi <= 2
                             ? "bg-coral"
                             : sisteVerdi <= 4
