@@ -162,7 +162,7 @@ export default function NyRapportPage() {
 
         {valgtPasientId && (
   <div className="lg:w-1/3 self-stretch">
-    <div className="h-full min-h-[1400px]"> {/* eller høyere hvis ønskelig */}
+    <div className="h-full min-h-[1400px]"> 
       <AIReportHelper
         patientId={valgtPasientId}
         onSaved={() => setSuccess("Rapport sendt via AI!")}

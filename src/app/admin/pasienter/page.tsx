@@ -34,7 +34,7 @@ interface Pasient {
 export default function PasientPage() {
   const [pasienter, setPasienter] = useState<Pasient[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true); // Ny tilstand for innlasting
+  const [loading, setLoading] = useState<boolean>(true); 
   const [navn, setNavn] = useState<string>("");
   const [alder, setAlder] = useState<string>("");
   const [diagnose, setDiagnose] = useState<string>("");
@@ -64,7 +64,7 @@ export default function PasientPage() {
       } catch (error) {
         setError(error instanceof Error ? error.message : "Ukjent feil");
       } finally {
-        setLoading(false); // Stopp innlasting
+        setLoading(false); 
       }
     };
 
@@ -199,7 +199,7 @@ export default function PasientPage() {
                       <div
                         className={`w-6 h-6 rounded-full ${
                           sisteVerdi == null
-                            ? "bg-light" // Ikke meldt inn smerte
+                            ? "bg-light" 
                             : sisteVerdi <= 2
                             ? "bg-coral"
                             : sisteVerdi <= 4
