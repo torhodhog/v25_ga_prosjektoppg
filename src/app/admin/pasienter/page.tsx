@@ -28,7 +28,7 @@ interface Pasient {
   navn: string;
   alder: number;
   diagnose: string;
-  smertehistorikk?: { verdi: number; dato: string }[]; // Nytt!
+  smertehistorikk?: { verdi: number; dato: string }[];
 }
 
 export default function PasientPage() {
@@ -40,12 +40,13 @@ export default function PasientPage() {
   const [diagnose, setDiagnose] = useState<string>("");
   const [showForm, setShowForm] = useState<boolean>(false);
 
+  // Hent pasienter ved mount
   useEffect(() => {
     const fetchPasienter = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
         setError("Ingen token funnet. Logg inn på nytt.");
-        setLoading(false); // Stopp innlasting
+        setLoading(false);
         return;
       }
 
@@ -58,7 +59,6 @@ export default function PasientPage() {
         );
 
         if (!res.ok) throw new Error("Kunne ikke hente pasienter");
-
         const data = await res.json();
         setPasienter(data);
       } catch (error) {
@@ -71,14 +71,106 @@ export default function PasientPage() {
     fetchPasienter();
   }, []);
 
+  // Opprett ny pasient
+  const handleNewPatient = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Ingen token funnet.");
+      return;
+    }
+
+    const res = await fetch(
+      "https://fysioterapi-backend-production.up.railway.app/api/pasienter",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          navn,
+          alder: Number(alder),
+          diagnose,
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      setError(errorData.error || "Noe gikk galt ved oppretting.");
+      return;
+    }
+
+    const newPasient = await res.json();
+    setPasienter((prev) => [...prev, newPasient]);
+    setNavn("");
+    setAlder("");
+    setDiagnose("");
+    setShowForm(false);
+  };
+
+  // Finn siste smerteverdi
+  function getSisteVerdi(p: Pasient) {
+    return p.smertehistorikk?.at(-1)?.verdi;
+  }
+
+  // Returner en prikk basert på sisteVerdi
+  function getSmertePrikk(verdi?: number) {
+    if (verdi == null) {
+      return (
+        <div
+          className="w-6 h-6 rounded-full bg-light"
+          title="Ingen smerteregistrering"
+        ></div>
+      );
+    } else if (verdi <= 3) {
+      return (
+        <div
+          className="w-6 h-6 rounded-full bg-green"
+          title={`Siste smerteverdi: ${verdi}`}
+        ></div>
+      );
+    } else if (verdi <= 7) {
+      return (
+        <div
+          className="w-6 h-6 rounded-full bg-yellow"
+          title={`Siste smerteverdi: ${verdi}`}
+        ></div>
+      );
+    } else {
+      return (
+        <div
+          className="w-6 h-6 rounded-full bg-coral"
+          title={`Siste smerteverdi: ${verdi}`}
+        ></div>
+      );
+    }
+  }
+
+  // Filtrer pasienter i tre kategorier
+  const greenList: Pasient[] = [];
+  const yellowList: Pasient[] = [];
+  const redList: Pasient[] = [];
+
+  pasienter.forEach((p) => {
+    const v = getSisteVerdi(p);
+    if (v == null || v <= 3) {
+      greenList.push(p);
+    } else if (v <= 7) {
+      yellowList.push(p);
+    } else {
+      redList.push(p);
+    }
+  });
+
   return (
     <>
-      <div className="mt-10 border-t pt-6 m-auto max-w-3xl">
+      <div className="mt-10 border-t pt-6 ">
         <div className="flex items-center justify-between mb-4">
           <button
-            onClick={
-              () => setShowForm(!showForm)}
-            className="text-sm text-light bg-teal px-4 py-2  rounded hover:bg-light_teal transition hover:cursor-pointer"
+            onClick={() => setShowForm(!showForm)}
+            className="text-sm text-light bg-teal px-4 py-2 ml-24 rounded hover:bg-light_teal transition"
           >
             {showForm ? "Lukk" : "Legg til pasient"}
           </button>
@@ -86,44 +178,8 @@ export default function PasientPage() {
 
         {showForm && (
           <form
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const token = localStorage.getItem("token");
-              if (!token) {
-                setError("Ingen token funnet.");
-                return;
-              }
-
-              const res = await fetch(
-                "https://fysioterapi-backend-production.up.railway.app/api/pasienter",
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                  },
-                  body: JSON.stringify({
-                    navn,
-                    alder: Number(alder),
-                    diagnose,
-                  }),
-                }
-              );
-
-              if (!res.ok) {
-                const errorData = await res.json();
-                setError(errorData.error || "Noe gikk galt ved oppretting.");
-                return;
-              }
-
-              const newPasient = await res.json();
-              setPasienter((prev) => [...prev, newPasient]);
-              setNavn("");
-              setAlder("");
-              setDiagnose("");
-              setShowForm(false);
-            }}
-            className="space-y-4 transition-all duration-300"
+            onSubmit={handleNewPatient}
+            className="space-y-4 transition-all duration-300 max-w-md mx-auto"
           >
             <input
               type="text"
@@ -152,7 +208,7 @@ export default function PasientPage() {
 
             <button
               type="submit"
-              className="bg-teal text-light px-4 py-2 rounded hover:bg-light_teal transition"
+              className="bg-teal text-turquoise px-4 py-2 rounded hover:bg-yellow transition"
             >
               Lagre pasient
             </button>
@@ -161,26 +217,33 @@ export default function PasientPage() {
       </div>
 
       <MaxWidthWrapper>
-        <div className="max-w-3xl mx-auto py-10">
-          <h1 className="text-2xl font-bold text-teal">Mine pasienter:</h1>
+        <div className="max-w-7xl mx-auto py-10">
+          <h1 className="text-2xl font-bold text-teal mb-6">Mine pasienter:</h1>
 
           {error && <p className="text-red-500 text-center">{error}</p>}
 
-          {loading ? ( // Viser spinner hvis dataene lastes inn
+          {loading ? (
             <div className="flex justify-center items-center mt-10">
               <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-teal"></div>
             </div>
           ) : (
-            <ul className="mt-4 space-y-4">
-              {pasienter.map((pasient) => {
-                const sisteVerdi = pasient.smertehistorikk?.at(-1)?.verdi;
-
-                return (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Kolonne 1: Grønn */}
+              <div>
+                <h2 className="text-center text-lg font-bold text-green mb-2">
+                  Grønn
+                </h2>
+                {greenList.length === 0 && (
+                  <p className="text-center italic text-gray-300">
+                    Ingen pasienter
+                  </p>
+                )}
+                {greenList.map((pasient) => (
                   <Link
                     href={`/admin/pasienter/${pasient._id}`}
                     key={pasient._id}
                   >
-                    <li className="border-2 bg-teal border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-2 flex justify-between items-center">
+                    <div className="border-2 bg-teal border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-4 flex justify-between items-center">
                       <div>
                         <h2 className="text-lg font-semibold text-light">
                           {pasient.navn}
@@ -189,37 +252,81 @@ export default function PasientPage() {
                           Alder: {pasient.alder}
                         </p>
                         <p className="text-light">
-                          Diagnose:{" "}
-                          <span className="font-bold">{pasient.diagnose}</span>
+                          Diagnose: <span className="font-bold">{pasient.diagnose}</span>
                         </p>
                       </div>
-
-                      {/* Farget dott */}
-                      <div
-                        className={`w-6 h-6 rounded-full ${
-                          sisteVerdi == null
-                            ? "bg-light"
-                            : sisteVerdi <= 2
-                            ? "bg-coral"
-                            : sisteVerdi <= 4
-                            ? "bg-peach"
-                            : sisteVerdi <= 6
-                            ? "bg-yellow"
-                            : sisteVerdi <= 8
-                            ? "bg-green"
-                            : "bg-green-500"
-                        }`}
-                        title={
-                          sisteVerdi == null
-                            ? "Ingen smerteregistrering"
-                            : `Siste smerteverdi: ${sisteVerdi}`
-                        }
-                      ></div>
-                    </li>
+                      {getSmertePrikk(getSisteVerdi(pasient))}
+                    </div>
                   </Link>
-                );
-              })}
-            </ul>
+                ))}
+              </div>
+
+              {/* Kolonne 2: Gul */}
+              <div>
+                <h2 className="text-center text-lg font-bold text-yellow-600 mb-2">
+                  Gul
+                </h2>
+                {yellowList.length === 0 && (
+                  <p className="text-center italic text-gray-300">
+                    Ingen pasienter
+                  </p>
+                )}
+                {yellowList.map((pasient) => (
+                  <Link
+                    href={`/admin/pasienter/${pasient._id}`}
+                    key={pasient._id}
+                  >
+                    <div className="border-2 bg-teal border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-4 flex justify-between items-center">
+                      <div>
+                        <h2 className="text-lg font-semibold text-light">
+                          {pasient.navn}
+                        </h2>
+                        <p className="font-extralight text-light">
+                          Alder: {pasient.alder}
+                        </p>
+                        <p className="text-light">
+                          Diagnose: <span className="font-bold">{pasient.diagnose}</span>
+                        </p>
+                      </div>
+                      {getSmertePrikk(getSisteVerdi(pasient))}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Kolonne 3: Rød */}
+              <div>
+                <h2 className="text-center text-lg font-bold text-coral mb-2">
+                  Rød
+                </h2>
+                {redList.length === 0 && (
+                  <p className="text-center italic text-gray-300">
+                    Ingen pasienter
+                  </p>
+                )}
+                {redList.map((pasient) => (
+                  <Link
+                    href={`/admin/pasienter/${pasient._id}`}
+                    key={pasient._id}
+                  >
+                    <div className="border-2 bg-teal border-gray-300 p-6 rounded-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-200 cursor-pointer mb-4 flex justify-between items-center">
+                      <div>
+                        <h2 className="text-lg font-semibold text-light">
+                          {pasient.navn}
+                        </h2>
+                        <p className="font-extralight text-light">
+                          Alder: {pasient.alder}
+                        </p>
+                        <p className="text-light">
+                          Diagnose: <span className="font-bold">{pasient.diagnose}</span>
+                        </p>
+                      </div>
+                      {getSmertePrikk(getSisteVerdi(pasient))}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           )}
 
           {pasienter.length === 0 && !error && !loading && (

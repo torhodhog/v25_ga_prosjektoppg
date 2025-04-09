@@ -32,38 +32,52 @@ export default function NyRapportPage() {
     fetchPasienter();
   }, []);
 
-  const sendRapport = async () => {
-    setError("");
-    setSuccess("");
-
-    const token = localStorage.getItem("token");
-    const res = await fetch(
-      "https://fysioterapi-backend-production.up.railway.app/api/rapporter",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          pasientId: valgtPasientId,
-          innhold: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`,
-        }),
+        const sendRapport = async () => {
+      setError("");
+      setSuccess("");
+    
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(
+          "https://fysioterapi-backend-production.up.railway.app/api/rapporter",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              pasientId: valgtPasientId,
+              innhold: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`,
+              tekst: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`, // Legg til tekst
+              type: "rapport", // Legg til type (juster etter hva API-et forventer)
+              terapeutId: "12345", // Bytt ut med riktig terapeut-ID (hent fra kontekst eller API)
+            }),
+          }
+        );
+    
+        // Logg responsen for feilsøking
+        console.log("API-respons:", res);
+    
+        // Sjekk statuskoden
+        if (!res.ok) {
+          const errorData = await res.json();
+          console.error("Feil fra API:", errorData);
+          setError(errorData.error || "Kunne ikke sende rapport");
+          return;
+        }
+    
+        // Hvis alt er OK, vis suksessmelding
+        setSuccess("Rapport sendt!");
+        setSymptomer("");
+        setObservasjoner("");
+        setTiltak("");
+        setValgtPasientId("");
+      } catch (error) {
+        console.error("Feil ved sending av rapport:", error);
+        setError("Noe gikk galt ved sending av rapport.");
       }
-    );
-
-    if (!res.ok) {
-      setError("Kunne ikke sende rapport");
-      return;
-    }
-
-    setSuccess("Rapport sendt!");
-    setSymptomer("");
-    setObservasjoner("");
-    setTiltak("");
-    setValgtPasientId("");
-  };
-
+    };
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col lg:flex-row gap-10 py-10">

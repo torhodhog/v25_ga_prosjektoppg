@@ -6,15 +6,15 @@ type Props = {
    let filnavn = "";
  
    if (verdi <= 2) {
-     filnavn = "1-2.png";
+     filnavn = "9-10.png";
    } else if (verdi <= 4) {
-     filnavn = "3-4.png";
+     filnavn = "7-8.png";
    } else if (verdi <= 6) {
      filnavn = "5-6.png";
    } else if (verdi <= 8) {
-     filnavn = "7-8.png";
+     filnavn = "3-4.png";
    } else {
-     filnavn = "9-10.png";
+     filnavn = "1-2.png";
    }
  
    return (
