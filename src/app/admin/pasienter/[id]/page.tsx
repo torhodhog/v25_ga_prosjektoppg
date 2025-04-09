@@ -195,8 +195,15 @@ export default function PatientDetailsPage() {
                   Sjekkliste for pasienter i alderen {patient.alder}
                 </h2>
                 <ul className="mt-2 list-disc pl-4 text-gray-500">
-                  <li>Innhent samtykke</li>
-                  <li>Vurder henvisning</li>
+                  <li>Benkjørhet <input type="checkbox" /></li>
+                  <li>Fallfare og balanse <input type="checkbox" /></li>
+                  <li>Hjerte-/karsykdommer <input type="checkbox" /></li>
+                  <li>Medisinbruk <input type="checkbox" /></li>
+                  <li>Sarkopeni <input type="checkbox" /></li>
+                  <li>Kognitiv funksjon og læringsevne <input type="checkbox" /></li>
+                  <li>Motivasjon, psykisk helse <input type="checkbox" /></li>
+                  <li>Hverdagsfunksjon og boligforhold <input type="checkbox" /></li>
+                  <li>Restitusjon <input type="checkbox" /></li>
                 </ul>
               </div>
             </div>

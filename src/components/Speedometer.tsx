@@ -8,7 +8,7 @@ export default function Speedometer({ smerteVerdi }: Props) {
   const angle = (smerteVerdi / 10) * 180;
 
   return (
-    <div className="relative w-56 h-32">
+    <div className="relative w-56 h-32 bg-white  rounded-md shadow-lg">
       <svg viewBox="0 0 200 100" className="w-full h-full">
         {/* Bue-deler */}
         <path d="M10,100 A90,90 0 0,1 70,10" fill="#F28B82" /> 
