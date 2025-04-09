@@ -24,6 +24,7 @@ import DeleteReportButton from "@/components/DeleteReportButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import SmileyIndicator from "@/components/SmileyIndicator";
 import Speedometer from "@/components/Speedometer";
+import MeldingListe from "@/components/MeldingListe";
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -62,8 +63,17 @@ export default function PatientDetailsPage() {
     dato: string;
   }
 
+  interface Melding {
+    _id: string;
+    sender: string;
+    mottakerId: string;
+    innhold: string;
+    timestamp: string;
+  }
+
   const [patient, setPatient] = useState<Patient | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
+  const [meldinger, setMeldinger] = useState<Melding[]>([]);
   const [editableField, setEditableField] = useState<keyof Patient | null>(
     null
   );
@@ -75,7 +85,7 @@ export default function PatientDetailsPage() {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const [patientRes, reportsRes] = await Promise.all([
+      const [patientRes, reportsRes, meldingerRes] = await Promise.all([
         fetch(
           `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -84,12 +94,19 @@ export default function PatientDetailsPage() {
           `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         ),
+        fetch(
+          `https://fysioterapi-backend-production.up.railway.app/api/meldinger/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        ),
       ]);
 
       const patientData = await patientRes.json();
       const reportsData = await reportsRes.json();
+      const meldingerData = await meldingerRes.json();
+
       setPatient(patientData);
       setReports(reportsData);
+      setMeldinger(meldingerData);
     };
 
     fetchData();
@@ -239,9 +256,9 @@ export default function PatientDetailsPage() {
                   redirectAfterDelete={true}
                 />
                 <Link href="/admin/rapporter">
-                <button className="bg-slate-500 ml-2 rounded-md px-2 py-3">
-                Lag ny rapport
-                </button>
+                  <button className="bg-slate-500 ml-2 rounded-md px-2 py-3">
+                    Lag ny rapport
+                  </button>
                 </Link>
               </div>
             </div>
@@ -258,7 +275,6 @@ export default function PatientDetailsPage() {
                     {reports.map((r) => {
                       const [symptomer, observasjoner, tiltak] =
                         r.innhold.split("\n\n");
-                      // 👈 inni map gir feil, så flytt ut om nødvendig
 
                       return (
                         <li
@@ -316,6 +332,11 @@ export default function PatientDetailsPage() {
                   </p>
                 )}
               </div>
+            </div>
+
+            {/* Meldinger */}
+            <div className="lg:col-span-12">
+              <MeldingListe meldinger={meldinger} setMeldinger={setMeldinger} />
             </div>
           </div>
         ) : (
