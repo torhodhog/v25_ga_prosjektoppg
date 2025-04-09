@@ -96,9 +96,9 @@ export function SidebarDemo({ user }: SidebarProps) {
 }
 
 export const Logo = () => (
-  <div className="flex items-center justify-center py-4">
+  <div className="flex items-center justify-center py-4 z-10">
     <Image
-      src="/logo.png"
+      src="/eightlogo.png"
       alt="Logo"
       width={100}
       height={100}
@@ -108,9 +108,9 @@ export const Logo = () => (
 );
 
 export const LogoIcon = () => (
-  <div className="flex items-center justify-center py-4">
+  <div className="flex items-center justify-center py-4 z-10">
     <Image
-      src="/logo.png"
+      src="/eightlogo.png"
       alt="Logo"
       width={50}
       height={50}

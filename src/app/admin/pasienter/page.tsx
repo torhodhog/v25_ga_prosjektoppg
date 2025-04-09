@@ -77,7 +77,7 @@ export default function PasientPage() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setShowForm(!showForm)}
-            className="text-sm text-turquoise bg-teal px-4 py-2 rounded hover:bg-yellow transition"
+            className="text-sm text-turquoise bg-teal px-4 py-2 ml-24 rounded hover:bg-yellow transition"
           >
             {showForm ? "Lukk" : "Legg til pasient"}
           </button>
