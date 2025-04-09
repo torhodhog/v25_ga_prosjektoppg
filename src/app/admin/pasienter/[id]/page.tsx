@@ -178,7 +178,7 @@ export default function PatientDetailsPage() {
 
   return (
     <MaxWidthWrapper>
-      <div className="p-8 max-w-6xl mx-auto bg-gray-50 min-h-screen">
+      <div className="p-8 max-w-6xl mx-auto bg-light min-h-screen">
         <h1 className="text-3xl font-bold mb-10 text-teal">
           Pasientdetaljer for {patient?.navn}:
         </h1>

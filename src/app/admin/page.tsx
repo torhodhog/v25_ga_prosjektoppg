@@ -39,10 +39,12 @@ export default function AdminPage() {
   return (
     <div className="bg-light/50 min-h-screen">
       <h1 className="text-xl text-neutral_gray font-bold ml-12 pt-8">
-        Tilgang kun for <br></br> <span className="font-extrabold text-black text-2xl">{terapeut?.navn ?? "innlogget bruker"}</span>
+        Tilgang kun for <br></br>{" "}
+        <span className="font-extrabold text-teal text-2xl">
+          {terapeut?.navn ?? "innlogget bruker"}
+        </span>
       </h1>
       <GridComponent />
-   
     </div>
   );
 }
