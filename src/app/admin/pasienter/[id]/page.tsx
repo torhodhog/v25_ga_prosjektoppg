@@ -22,7 +22,7 @@
 import DeletePatientButton from "@/components/DeletePatientButton";
 import DeleteReportButton from "@/components/DeleteReportButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import SmileyIndicator from "@/components/SmileyIndicator";
+
 import Speedometer from "@/components/Speedometer";
 import MeldingListe from "@/components/MeldingListe";
 
@@ -37,6 +37,7 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
+import AiAssistentPanel from "@/components/AIAssistentPanel";
 
 export default function PatientDetailsPage() {
   const { id } = useParams();
@@ -133,6 +134,13 @@ export default function PatientDetailsPage() {
     setEditableField(null);
   };
 
+  function getLabel(verdi?: number) {
+    if (verdi == null) return "Ingen registrering";
+    if (verdi <= 3) return "Lav smerte";
+    if (verdi <= 7) return "Moderat smerte";
+    return "Høy smerte";
+  }
+
   const renderField = (label: string, field: keyof Patient) => (
     <p>
       <strong>{label}:</strong>{" "}
@@ -185,25 +193,47 @@ export default function PatientDetailsPage() {
 
         {patient ? (
           <div className="grid lg:grid-cols-12 gap-8">
-            {/* Smiley + Sjekkliste */}
+            {/* Statuskort + Sjekkliste */}
             <div className="lg:col-span-3 space-y-6">
-              <SmileyIndicator
-                verdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
-              />
+              <div className="bg-white p-4 rounded-xl shadow text-center border">
+                <p className="text-sm text-gray-600">Siste status:</p>
+                <p className="text-lg font-semibold text-green-600">
+                  {getLabel(patient.smertehistorikk.at(-1)?.verdi)}
+                </p>
+              </div>
+
               <div className="bg-white p-4 rounded-xl shadow text-sm border">
                 <h2 className="text-center font-semibold text-gray-600">
                   Sjekkliste for pasienter i alderen {patient.alder}
                 </h2>
                 <ul className="mt-2 list-disc pl-4 text-gray-500">
-                  <li>Benkjørhet <input type="checkbox" /></li>
-                  <li>Fallfare og balanse <input type="checkbox" /></li>
-                  <li>Hjerte-/karsykdommer <input type="checkbox" /></li>
-                  <li>Medisinbruk <input type="checkbox" /></li>
-                  <li>Sarkopeni <input type="checkbox" /></li>
-                  <li>Kognitiv funksjon og læringsevne <input type="checkbox" /></li>
-                  <li>Motivasjon, psykisk helse <input type="checkbox" /></li>
-                  <li>Hverdagsfunksjon og boligforhold <input type="checkbox" /></li>
-                  <li>Restitusjon <input type="checkbox" /></li>
+                  <li>
+                    Benkjørhet <input type="checkbox" />
+                  </li>
+                  <li>
+                    Fallfare og balanse <input type="checkbox" />
+                  </li>
+                  <li>
+                    Hjerte-/karsykdommer <input type="checkbox" />
+                  </li>
+                  <li>
+                    Medisinbruk <input type="checkbox" />
+                  </li>
+                  <li>
+                    Sarkopeni <input type="checkbox" />
+                  </li>
+                  <li>
+                    Kognitiv funksjon og læringsevne <input type="checkbox" />
+                  </li>
+                  <li>
+                    Motivasjon, psykisk helse <input type="checkbox" />
+                  </li>
+                  <li>
+                    Hverdagsfunksjon og boligforhold <input type="checkbox" />
+                  </li>
+                  <li>
+                    Restitusjon <input type="checkbox" />
+                  </li>
                 </ul>
               </div>
             </div>
@@ -221,11 +251,6 @@ export default function PatientDetailsPage() {
                   {renderField("Adresse", "adresse")}
                   {renderField("Telefon", "telefon")}
                   {renderField("E-post", "epost")}
-                  {renderField("Diagnose", "diagnose")}
-                  {renderField("Smerterate ved første møte", "smerterate")}
-                  {renderField("Fremgang", "fremgang")}
-                  {renderField("Henvisende lege", "henvisendeLege")}
-                  {renderField("Kommentar", "kommentar")}
                 </div>
               </div>
 
@@ -251,38 +276,47 @@ export default function PatientDetailsPage() {
               )}
             </div>
 
-            {/* Speedometer + slett */}
-            <div className="lg:col-span-3 flex flex-col items-center justify-between">
+            {/* Speedometer + siste rapporter */}
+            <div className="lg:col-span-3 space-y-6">
               <Speedometer
                 smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
               />
-              <div className="mt-6">
+
+              <AiAssistentPanel
+                rapporter={reports}
+                smertehistorikk={patient.smertehistorikk}
+                onUse={(tekst) => {
+                  localStorage.setItem("foreslaattRapport", tekst);
+                  localStorage.setItem("foreslaattPasientId", patient._id); // 👈
+                  window.location.href = "/admin/rapporter";
+                }}
+              />
+
+              <div className="flex gap-2 justify-center">
                 <DeletePatientButton
                   patientId={patient._id}
                   patientName={patient.navn}
                   redirectAfterDelete={true}
                 />
                 <Link href="/admin/rapporter">
-                  <button className="bg-light_teal text-white ml-2 rounded-md px-2 py-3">
+                  <button className="bg-light_teal text-white rounded-sm px-3 py-4 text-sm">
                     Lag ny rapport 📝
                   </button>
                 </Link>
               </div>
             </div>
 
-            {/* Rapporter */}
-            <div className="lg:col-span-12 mt-10">
+            {/* Alle rapporter */}
+            <div className="lg:col-span-12 mt-10" id="rapporter">
               <div className="bg-white p-6 rounded-xl shadow border">
                 <h2 className="text-lg font-semibold text-teal mb-4">
                   Tidligere rapporter
                 </h2>
-
                 {reports.length > 0 ? (
                   <ul className="space-y-3 text-sm text-gray-700">
                     {reports.map((r) => {
                       const [symptomer, observasjoner, tiltak] =
                         r.innhold.split("\n\n");
-
                       return (
                         <li
                           key={r._id}
@@ -294,7 +328,6 @@ export default function PatientDetailsPage() {
                               <p className="text-sm text-gray-500 font-medium">
                                 {new Date(r.dato).toLocaleDateString("no-NO")}
                               </p>
-
                               {!open ? (
                                 <p className="mt-1 text-gray-500 italic truncate">
                                   {r.innhold.slice(0, 80)}...

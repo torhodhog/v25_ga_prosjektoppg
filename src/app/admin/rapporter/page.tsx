@@ -29,65 +29,75 @@ export default function NyRapportPage() {
       const data = await res.json();
       setPasienter(data);
     };
+
     fetchPasienter();
+
+    // Hent forslag fra AI hvis det ligger i localStorage
+    const foreslaattRapport = localStorage.getItem("foreslaattRapport");
+    const foreslaattPasientId = localStorage.getItem("foreslaattPasientId");
+
+    if (foreslaattRapport) {
+      const [symptomer, observasjoner, tiltak] = foreslaattRapport.split("\n\n");
+      setSymptomer(symptomer ?? "");
+      setObservasjoner(observasjoner ?? "");
+      setTiltak(tiltak ?? "");
+    }
+
+    if (foreslaattPasientId) {
+      setValgtPasientId(foreslaattPasientId);
+    }
+
+    localStorage.removeItem("foreslaattRapport");
+    localStorage.removeItem("foreslaattPasientId");
   }, []);
 
-        const sendRapport = async () => {
-      setError("");
-      setSuccess("");
-    
-      const token = localStorage.getItem("token");
-      try {
-        const res = await fetch(
-          "https://fysioterapi-backend-production.up.railway.app/api/rapporter",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              pasientId: valgtPasientId,
-              innhold: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`,
-              tekst: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`, // Legg til tekst
-              type: "rapport", // Legg til type (juster etter hva API-et forventer)
-              terapeutId: "12345", // Bytt ut med riktig terapeut-ID (hent fra kontekst eller API)
-            }),
-          }
-        );
-    
-        // Logg responsen for feilsøking
-        console.log("API-respons:", res);
-    
-        // Sjekk statuskoden
-        if (!res.ok) {
-          const errorData = await res.json();
-          console.error("Feil fra API:", errorData);
-          setError(errorData.error || "Kunne ikke sende rapport");
-          return;
+  const sendRapport = async () => {
+    setError("");
+    setSuccess("");
+
+    const token = localStorage.getItem("token");
+    try {
+      const res = await fetch(
+        "https://fysioterapi-backend-production.up.railway.app/api/rapporter",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            pasientId: valgtPasientId,
+            innhold: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`,
+            tekst: `${symptomer}\n\n${observasjoner}\n\n${tiltak}`,
+            type: "rapport",
+          }),
         }
-    
-        // Hvis alt er OK, vis suksessmelding
-        setSuccess("Rapport sendt!");
-        setSymptomer("");
-        setObservasjoner("");
-        setTiltak("");
-        setValgtPasientId("");
-      } catch (error) {
-        console.error("Feil ved sending av rapport:", error);
-        setError("Noe gikk galt ved sending av rapport.");
+      );
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        setError(errorData.error || "Kunne ikke sende rapport");
+        return;
       }
-    };
+
+      setSuccess("Rapport sendt!");
+      setSymptomer("");
+      setObservasjoner("");
+      setTiltak("");
+      setValgtPasientId("");
+    } catch {
+      setError("Noe gikk galt ved sending av rapport.");
+    }
+  };
+
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col lg:flex-row gap-10 py-10">
-        {/* Skjemaside */}
         <div className="flex-1 space-y-6">
           <h1 className="text-3xl font-bold text-neutral_gray">
             📝 Ny pasientrapport
           </h1>
 
-          {/* Velg pasient */}
           <div>
             <label className="block text-sm font-medium text-neutral_gray mb-1">
               Velg pasient:
@@ -118,7 +128,6 @@ export default function NyRapportPage() {
             </div>
           )}
 
-          {/* Rapportfelt */}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-semibold mb-1 text-neutral_gray">
@@ -160,7 +169,6 @@ export default function NyRapportPage() {
             </div>
           </div>
 
-          {/* Send knapp */}
           <div className="pt-4">
             <button
               onClick={sendRapport}
@@ -175,20 +183,19 @@ export default function NyRapportPage() {
         </div>
 
         {valgtPasientId && (
-  <div className="lg:w-1/3 self-stretch">
-    <div className="h-full min-h-[1400px]"> 
-      <AIReportHelper
-        patientId={valgtPasientId}
-        onSaved={() => setSuccess("Rapport sendt via AI!")}
-        onFillFields={({ rapport, forslag }) => {
-          setSymptomer(rapport);
-          setTiltak(forslag);
-        }}
-      />
-    </div>
-  </div>
-)}
-
+          <div className="lg:w-1/3 self-stretch">
+            <div className="h-full min-h-[1400px]">
+              <AIReportHelper
+                patientId={valgtPasientId}
+                onSaved={() => setSuccess("Rapport sendt via AI!")}
+                onFillFields={({ rapport, forslag }) => {
+                  setSymptomer(rapport);
+                  setTiltak(forslag);
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </MaxWidthWrapper>
   );
