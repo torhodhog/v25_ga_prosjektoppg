@@ -12,7 +12,7 @@ interface Props {
 
 export default function DeletePatientButton({
   patientId,
-  
+
   redirectAfterDelete = false,
   onDeleted,
 }: Props) {
@@ -27,25 +27,18 @@ export default function DeletePatientButton({
       return;
     }
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Ingen token funnet.");
-      return;
-    }
-
     try {
       const res = await fetch(
         `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${patientId}`,
         {
           method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: "include", // Bruk cookies for autentisering
         }
       );
 
       if (!res.ok) {
         const errorData = await res.json();
+        console.error("Feil ved sletting av pasient:", errorData);
         setError(errorData.error || "Kunne ikke slette pasienten.");
         return;
       }
@@ -55,7 +48,8 @@ export default function DeletePatientButton({
       } else if (onDeleted) {
         onDeleted();
       }
-    } catch {
+    } catch (err) {
+      console.error("Noe gikk galt ved sletting:", err);
       setError("Noe gikk galt ved sletting.");
     }
   };

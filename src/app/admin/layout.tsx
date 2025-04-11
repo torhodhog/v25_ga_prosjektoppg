@@ -20,26 +20,36 @@ export default function AdminLayout({
         const res = await fetch(
           "https://fysioterapi-backend-production.up.railway.app/api/auth/me",
           {
-            credentials: "include", // Bruk cookies for autentisering
+            credentials: "include", // Send cookies for autentisering
           }
         );
 
         if (!res.ok) {
           console.error("Feil ved autentisering: Status", res.status);
-          throw new Error("Kunne ikke hente brukerdata");
+          const responseBody = await res.text();
+          console.error("Headers mottatt:", res.headers);
+          console.error("Body mottatt:", responseBody);
+
+          if (res.status === 401) {
+            console.error("401 Unauthorized: Brukeren er ikke autentisert.");
+            router.push("/"); // Redirect til root hvis ikke autentisert
+          }
+          return;
         }
 
         const data = await res.json();
 
         if (data.rolle !== "terapeut") {
+          console.error("Brukeren har ikke riktig rolle: ", data.rolle);
           router.push("/"); // Redirect hvis ikke terapeut
           return;
         }
 
+        console.log("Brukerdata hentet: ", data);
         setUser(data);
       } catch (error) {
         console.error("Feil ved henting av bruker:", error);
-        router.push("/"); // Redirect ved feil
+        router.push("/login"); // Redirect ved feil
       }
     };
 

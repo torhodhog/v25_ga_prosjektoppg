@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import ChatbotButton from "@/components/ChatBotButtom";
 import GridComponent from "@/components/gridComponent";
 
 interface Terapeut {
@@ -12,24 +11,34 @@ interface Terapeut {
 
 export default function AdminPage() {
   const [terapeut, setTerapeut] = useState<Terapeut | null>(null);
+  const [error, setError] = useState<string | null>(null); // Legg til en feilmeldingstilstand
 
   useEffect(() => {
     const fetchTerapeut = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
       try {
         const res = await fetch(
           "https://fysioterapi-backend-production.up.railway.app/api/auth/me",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            method: "GET",
+            credentials: "include", // Sørger for at cookies sendes med i forespørselen
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
         );
-        if (!res.ok) throw new Error("Kunne ikke hente brukerdata");
+        if (!res.ok) {
+          throw new Error("Kunne ikke hente brukerdata");
+        }
         const data = await res.json();
         setTerapeut(data);
-      } catch (err) {
-        console.error("Feil ved henting av terapeut:", err);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message); // Lagre feilmeldingen
+          console.error("Feil ved henting av terapeut:", err);
+        } else {
+          setError("En ukjent feil oppstod");
+          console.error("Ukjent feil:", err);
+        }
       }
     };
 
@@ -39,12 +48,21 @@ export default function AdminPage() {
   return (
     <div className="bg-light/50 min-h-screen">
       <h1 className="text-xl text-neutral_gray font-bold ml-12 pt-8">
-        Tilgang kun for <br></br>{" "}
+        Tilgang kun for <br />
         <span className="font-extrabold text-teal text-2xl">
           {terapeut?.navn ?? "innlogget bruker"}
         </span>
       </h1>
-      <GridComponent />
+
+      {/* Vis en feilmelding hvis det oppstod en feil */}
+      {error && (
+        <div className="text-red-600 font-bold ml-12 mt-4">
+          <p>{error}</p>
+        </div>
+      )}
+
+      {/* Vis GridComponent kun hvis terapeut er hentet */}
+      {terapeut && <GridComponent />}
     </div>
   );
 }

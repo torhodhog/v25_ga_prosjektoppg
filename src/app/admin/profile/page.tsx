@@ -12,14 +12,11 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return setError("Ingen token funnet. Logg inn på nytt.");
-
       try {
         const res = await fetch(
           "https://fysioterapi-backend-production.up.railway.app/api/auth/me",
           {
-            headers: { Authorization: `Bearer ${token}` },
+            credentials: "include", // Send cookies for autentisering
           }
         );
 
