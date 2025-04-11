@@ -4,24 +4,30 @@ import { SidebarDemo } from "@/components/Sidebar";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<{ navn: string; rolle: string } | null>(null);
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [user, setUser] = useState<{ navn: string; rolle: string } | null>(
+    null
+  );
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        router.push("/"); // Redirect til login hvis ikke innlogget
-        return;
-      }
-
       try {
-        const res = await fetch("https://fysioterapi-backend-production.up.railway.app/api/auth/me", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          "https://fysioterapi-backend-production.up.railway.app/api/auth/me",
+          {
+            credentials: "include", // Bruk cookies for autentisering
+          }
+        );
 
-        if (!res.ok) throw new Error("Kunne ikke hente brukerdata");
+        if (!res.ok) {
+          console.error("Feil ved autentisering: Status", res.status);
+          throw new Error("Kunne ikke hente brukerdata");
+        }
 
         const data = await res.json();
 

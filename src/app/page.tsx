@@ -17,17 +17,17 @@ export default function Home() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include", // Send cookies for autentisering
           body: JSON.stringify({ epost: username, passord: password }),
         }
       );
 
-      const data = await res.json();
-
       if (!res.ok) {
+        const data = await res.json();
         throw new Error(data.message || "Innlogging feilet");
       }
 
-      localStorage.setItem("token", data.token);
+      // Redirect til admin etter vellykket innlogging
       window.location.href = "/admin";
     } catch (error: unknown) {
       if (error instanceof Error) {

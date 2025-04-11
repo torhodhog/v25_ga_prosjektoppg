@@ -19,11 +19,10 @@ export default function NyRapportPage() {
 
   useEffect(() => {
     const fetchPasienter = async () => {
-      const token = localStorage.getItem("token");
       const res = await fetch(
         "https://fysioterapi-backend-production.up.railway.app/api/pasienter/mine",
         {
-          headers: { Authorization: `Bearer ${token}` },
+          credentials: "include", // Bruk cookies for autentisering
         }
       );
       const data = await res.json();
@@ -37,7 +36,8 @@ export default function NyRapportPage() {
     const foreslaattPasientId = localStorage.getItem("foreslaattPasientId");
 
     if (foreslaattRapport) {
-      const [symptomer, observasjoner, tiltak] = foreslaattRapport.split("\n\n");
+      const [symptomer, observasjoner, tiltak] =
+        foreslaattRapport.split("\n\n");
       setSymptomer(symptomer ?? "");
       setObservasjoner(observasjoner ?? "");
       setTiltak(tiltak ?? "");
@@ -55,15 +55,14 @@ export default function NyRapportPage() {
     setError("");
     setSuccess("");
 
-    const token = localStorage.getItem("token");
     try {
       const res = await fetch(
         "https://fysioterapi-backend-production.up.railway.app/api/rapporter",
         {
           method: "POST",
+          credentials: "include", // Bruk cookies for autentisering
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             pasientId: valgtPasientId,
@@ -123,7 +122,8 @@ export default function NyRapportPage() {
                 {pasienter.find((p) => p._id === valgtPasientId)?.navn}
               </p>
               <p className="text-sm text-gray-500">
-                📅 <strong>Dato:</strong> {new Date().toLocaleDateString("no-NO")}
+                📅 <strong>Dato:</strong>{" "}
+                {new Date().toLocaleDateString("no-NO")}
               </p>
             </div>
           )}

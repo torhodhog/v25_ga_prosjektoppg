@@ -80,6 +80,9 @@ export default function PatientDetailsPage() {
   );
   const [editedValue, setEditedValue] = useState<string | number>("");
   const [open, setOpen] = useState(false);
+  const [logg, setLogg] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,6 +135,42 @@ export default function PatientDetailsPage() {
     const updated = await res.json();
     setPatient(updated);
     setEditableField(null);
+  };
+
+  const opprettLogg = async () => {
+    setError("");
+    setSuccess("");
+
+    try {
+      const res = await fetch("/api/logg", {
+        method: "POST",
+        credentials: "include", // Bruk cookies for autentisering
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          pasientId: id,
+          tekst: logg,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Kunne ikke opprette logg");
+      }
+
+      setSuccess("Logg opprettet!");
+      setLogg("");
+    } catch (err) {
+      if (err && typeof err === "object" && "message" in err) {
+        setError(
+          err && typeof err === "object" && "message" in err
+            ? (err.message as string) || "Noe gikk galt"
+            : "Noe gikk galt"
+        );
+      } else {
+        setError("Noe gikk galt");
+      }
+    }
   };
 
   function getLabel(verdi?: number) {
@@ -377,6 +416,33 @@ export default function PatientDetailsPage() {
             {/* Meldinger */}
             <div className="lg:col-span-12">
               <MeldingListe meldinger={meldinger} setMeldinger={setMeldinger} />
+            </div>
+
+            {/* Opprett logg */}
+            <div className="lg:col-span-12 mt-10">
+              <div className="bg-white p-6 rounded-xl shadow border">
+                <h2 className="text-lg font-semibold text-teal mb-4">
+                  Opprett logg for pasient
+                </h2>
+
+                {error && <p className="text-red-500">{error}</p>}
+                {success && <p className="text-green-500">{success}</p>}
+
+                <textarea
+                  value={logg}
+                  onChange={(e) => setLogg(e.target.value)}
+                  placeholder="Skriv loggtekst her..."
+                  className="w-full border p-2 rounded mb-4"
+                  rows={5}
+                />
+
+                <button
+                  onClick={opprettLogg}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Lagre logg
+                </button>
+              </div>
             </div>
           </div>
         ) : (
