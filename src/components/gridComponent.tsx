@@ -13,16 +13,11 @@ const GridComponent = () => {
 
   useEffect(() => {
     const fetchVarsler = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
       try {
         const res = await fetch(
-          "https://fysioterapi-backend-production.up.railway.app/api/varsler", 
+          "https://fysioterapi-backend-production.up.railway.app/api/varsler",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            credentials: "include", // Bruk cookies for autentisering
           }
         );
 

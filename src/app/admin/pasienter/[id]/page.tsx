@@ -86,21 +86,18 @@ export default function PatientDetailsPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
       const [patientRes, reportsRes, meldingerRes] = await Promise.all([
         fetch(
           `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { credentials: "include" } // Bruk cookies for autentisering
         ),
         fetch(
           `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { credentials: "include" } // Bruk cookies for autentisering
         ),
         fetch(
           `https://fysioterapi-backend-production.up.railway.app/api/meldinger/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { credentials: "include" } // Bruk cookies for autentisering
         ),
       ]);
 
