@@ -72,7 +72,7 @@ export default function SettingsControls() {
       </div>
 
       <div>
-        <label className="block mb-1 font-semibold">Tekststørrelse:</label>
+        <label className="block mb-1 font-semibold">Tekststørrelse :</label>
         <div className="flex flex-wrap gap-2">
           {fontSizes.map((size) => (
             <button
