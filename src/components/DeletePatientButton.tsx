@@ -32,7 +32,7 @@ export default function DeletePatientButton({
         `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${patientId}`,
         {
           method: "DELETE",
-          credentials: "include", // Bruk cookies for autentisering
+          credentials: "include", // Dette mener jeg med 'include' i fetch. 
         }
       );
 
