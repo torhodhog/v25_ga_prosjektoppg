@@ -71,3 +71,18 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.pulse-animation {
+  animation: pulse 0.5s infinite;
+}

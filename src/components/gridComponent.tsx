@@ -72,7 +72,7 @@ const GridComponent = () => {
               <p className="mt-3 text-lg">{item.title}</p>
 
               {(item.badge ?? 0) > 0 && (
-                <div className="absolute top-2 right-4 bg-red-600 text-white text-xs rounded-full px-2 py-0.5">
+                                <div className="absolute top-2 right-4 bg-red-600 text-white text-2xl rounded-full px-2 py-0.5 animate-pulse">
                   {item.badge}
                 </div>
               )}
