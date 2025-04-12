@@ -75,7 +75,7 @@ export default function VarslerPage() {
         )}
 
         {!loading && varsler.length === 0 && !error && (
-          <p className="text-gray-500">Ingen varsler tilgjengelig.</p>
+          <p className="text-gray-500">Ingen varsler tilgjengelig!</p>
         )}
       </div>
     </MaxWidthWrapper>
