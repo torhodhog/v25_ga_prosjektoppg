@@ -166,8 +166,9 @@ export default function PasientPage() {
 
   return (
     <>
+    <MaxWidthWrapper>
       <div className="mt-10 border-t pt-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 ">
           <button
             onClick={() => setShowForm(!showForm)}
             className="text-sm text-light bg-teal px-4 py-2 ml-24 rounded hover:bg-light_teal transition"
@@ -215,7 +216,7 @@ export default function PasientPage() {
         )}
       </div>
 
-      <MaxWidthWrapper>
+      
         <div className="max-w-7xl mx-auto py-10">
           <h1 className="text-2xl font-bold text-teal mb-6">Mine pasienter:</h1>
 

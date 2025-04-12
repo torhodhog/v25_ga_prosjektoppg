@@ -65,9 +65,9 @@ export default function VarslerPage() {
               <li key={varsel.id || index} className="border p-4 rounded shadow">
                 <p className="text-sm text-gray-600">{formatDate(varsel.dato)}</p>
                 <p className="text-sm text-gray-600">
-                  Fra: {varsel.pasientId?.navn || "Ukjent"}
+                  Fra: <span className="font-bold text-black">{varsel.pasientId?.navn || "Ukjent"}</span>
                 </p>
-                <p className="text-sm text-gray-600">Type: {varsel.type}</p>
+                <p className="text-sm text-gray-600">Type: <span className="font-bold text-black">{varsel.type}</span></p>
                 <p className="text-lg font-medium">{varsel.melding}</p>
               </li>
             ))}

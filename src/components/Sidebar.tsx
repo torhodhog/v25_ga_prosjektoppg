@@ -18,7 +18,7 @@ interface SidebarProps {
 
 export function SidebarDemo({ user }: SidebarProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true); // Default åpen
 
   // Logg ut-funksjon
   const handleLogout = () => {
@@ -52,7 +52,9 @@ export function SidebarDemo({ user }: SidebarProps) {
   return (
     <div
       className={cn(
-        "fixed top-0 left-0 h-screen w-64  flex flex-col"
+        "fixed top-0 left-0 h-screen",
+        open ? "w-24" : "w-16", 
+        "flex flex-col bg-dark"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
@@ -68,13 +70,12 @@ export function SidebarDemo({ user }: SidebarProps) {
               onClick={handleLogout}
               className="flex items-center gap-2 p-2 w-full text-left text-light hover:bg-light_teal rounded-md"
             >
-              <IconArrowLeft className="h-5 w-5  shrink-0" />
-              <span>Logg ut</span>
+              <IconArrowLeft className="h-5 w-5 shrink-0" />
+              {open && <span>Logg ut</span>}
             </button>
           </div>
 
           {/* Brukerinformasjon */}
-                    {/* Brukerinformasjon */}
           <div className="flex items-center gap-2 p-4">
             <Image
               src="/doctor.png"
@@ -96,7 +97,7 @@ export function SidebarDemo({ user }: SidebarProps) {
 }
 
 export const Logo = () => (
-  <div className="flex items-center justify-center py-4 ">
+  <div className="flex items-center justify-center py-4">
     <Image
       src="/eightlogo.png"
       alt="Logo"
@@ -108,7 +109,7 @@ export const Logo = () => (
 );
 
 export const LogoIcon = () => (
-  <div className="flex items-center justify-center py-4 ">
+  <div className="flex items-center justify-center py-4">
     <Image
       src="/eightlogo.png"
       alt="Logo"

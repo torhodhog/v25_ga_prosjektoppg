@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import GridComponent from "@/components/gridComponent";
+import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 
 interface Terapeut {
   navn: string;
@@ -46,7 +47,9 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <div className="bg-light/50 min-h-screen">
+    <>
+    <MaxWidthWrapper >
+    <div className="bg-light/50 min-h-screen ml-12">
       <h1 className="text-xl text-neutral_gray font-bold ml-12 pt-8">
         Tilgang kun for <br />
         <span className="font-extrabold text-teal text-2xl">
@@ -64,5 +67,7 @@ export default function AdminPage() {
       {/* Vis GridComponent kun hvis terapeut er hentet */}
       {terapeut && <GridComponent />}
     </div>
+    </MaxWidthWrapper>
+    </>
   );
 }
