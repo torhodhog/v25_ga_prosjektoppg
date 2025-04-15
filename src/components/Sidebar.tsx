@@ -18,11 +18,11 @@ interface SidebarProps {
 
 export function SidebarDemo({ user }: SidebarProps) {
   const router = useRouter();
-  const [open, setOpen] = useState(true); // Default åpen
+  const [open, setOpen] = useState(true); 
 
   // Logg ut-funksjon
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Fjern token
+    localStorage.removeItem("token"); 
     router.push("/");
   };
 
@@ -53,7 +53,7 @@ export function SidebarDemo({ user }: SidebarProps) {
     <div
       className={cn(
         "fixed top-0 left-0 h-screen",
-        open ? "w-24" : "w-16", 
+        open ? "w-20" : "w-16", 
         "flex flex-col bg-dark"
       )}
     >

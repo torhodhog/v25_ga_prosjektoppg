@@ -7,19 +7,20 @@ interface Varsel {
   id: string;
   melding: string;
   dato: string;
-  pasientId: { navn: string }; // Oppdatert for å inkludere navn
+  pasientId: { navn: string }; 
   type: string;
+  createdAt: string; 
 }
 
 export default function VarslerPage() {
   const [varsler, setVarsler] = useState<Varsel[]>([]);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true); // Ny tilstand for lasting
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchVarsler = async () => {
       try {
-        setLoading(true); // Sett loading til true før henting starter
+        setLoading(true); 
         const res = await fetch(
           "https://fysioterapi-backend-production.up.railway.app/api/varsler",
           {
@@ -36,7 +37,7 @@ export default function VarslerPage() {
       } catch (err) {
         setError(err instanceof Error ? err.message : "Noe gikk galt");
       } finally {
-        setLoading(false); // Sett loading til false når henting er ferdig
+        setLoading(false); 
       }
     };
 
@@ -44,6 +45,7 @@ export default function VarslerPage() {
   }, []);
 
   const formatDate = (dateString: string) => {
+    if (!dateString) return "Ingen dato";
     const date = new Date(dateString);
     return date instanceof Date && !isNaN(date.getTime())
       ? date.toLocaleDateString("no-NO")
@@ -54,26 +56,33 @@ export default function VarslerPage() {
     <MaxWidthWrapper>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Varsler</h1>
-
-        {loading && <p className="text-gray-500">Laster...</p>} {/* Spinner */}
-
+        {loading && <p className="text-gray-500">Laster...</p>} 
         {error && <p className="text-red-500">{error}</p>}
-
         {!loading && (
           <ul className="space-y-4">
             {varsler.map((varsel, index) => (
-              <li key={varsel.id || index} className="border p-4 rounded shadow">
-                <p className="text-sm text-gray-600">{formatDate(varsel.dato)}</p>
+              <li
+                key={varsel.id || index}
+                className="border p-4 rounded shadow"
+              >
                 <p className="text-sm text-gray-600">
-                  Fra: <span className="font-bold text-black">{varsel.pasientId?.navn || "Ukjent"}</span>
+                  {formatDate(varsel.createdAt)} {/* Bruker createdAt */}
                 </p>
-                <p className="text-sm text-gray-600">Type: <span className="font-bold text-black">{varsel.type}</span></p>
+                <p className="text-sm text-gray-600">
+                  Fra:{" "}
+                  <span className="font-bold text-black">
+                    {varsel.pasientId?.navn || "Ukjent"}
+                  </span>
+                </p>
+                <p className="text-sm text-gray-600">
+                  Type:{" "}
+                  <span className="font-bold text-black">{varsel.type}</span>
+                </p>
                 <p className="text-lg font-medium">{varsel.melding}</p>
               </li>
             ))}
           </ul>
         )}
-
         {!loading && varsler.length === 0 && !error && (
           <p className="text-gray-500">Ingen varsler tilgjengelig!</p>
         )}

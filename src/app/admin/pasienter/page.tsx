@@ -166,7 +166,7 @@ export default function PasientPage() {
 
   return (
     <>
-    <MaxWidthWrapper>
+    <MaxWidthWrapper >
       <div className="mt-10 border-t pt-6">
         <div className="flex items-center justify-between mb-4 ">
           <button
