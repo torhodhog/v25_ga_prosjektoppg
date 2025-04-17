@@ -223,61 +223,13 @@ export default function PatientDetailsPage() {
   return (
     <MaxWidthWrapper>
       <div className="p-8 max-w-6xl mx-auto bg-light min-h-screen">
-        <h1 className="text-3xl font-bold mb-10 text-teal">
+        <h1 className="text-3xl font-bold mb-10 text-teal text-center">
           Pasientdetaljer for {patient?.navn}:
         </h1>
 
         {patient ? (
           <div className="grid lg:grid-cols-12 gap-8">
-            {/* Siste status */}
             <div className="lg:col-span-3 space-y-6">
-              <div className="bg-white p-4 rounded-xl shadow text-center border">
-                <p className="text-sm text-gray-600">Siste status:</p>
-                <p className="text-lg font-semibold text-green-600">
-                  {getLabel(patient.smertehistorikk.at(-1)?.verdi)}
-                </p>
-              </div>
-            </div>
-
-            {/* Sjekkliste */}
-            <div className="lg:col-span-3 space-y-6">
-              <div className="bg-white p-4 rounded-xl shadow text-sm border">
-                <h2 className="text-center font-semibold text-gray-600">
-                  Sjekkliste for pasienter i alderen {patient.alder}
-                </h2>
-                <ul className="mt-2 list-disc pl-4 text-gray-500">
-                  <li>
-                    Benkjørhet <input type="checkbox" />
-                  </li>
-                  <li>
-                    Fallfare og balanse <input type="checkbox" />
-                  </li>
-                  <li>
-                    Hjerte-/karsykdommer <input type="checkbox" />
-                  </li>
-                  <li>
-                    Medisinbruk <input type="checkbox" />
-                  </li>
-                  <li>
-                    Sarkopeni <input type="checkbox" />
-                  </li>
-                  <li>
-                    Kognitiv funksjon og læringsevne <input type="checkbox" />
-                  </li>
-                  <li>
-                    Motivasjon, psykisk helse <input type="checkbox" />
-                  </li>
-                  <li>
-                    Hverdagsfunksjon og boligforhold <input type="checkbox" />
-                  </li>
-                  <li>
-                    Restitusjon <input type="checkbox" />
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="lg:col-span-6 space-y-6">
               <div className="bg-white p-6 rounded-xl shadow border">
                 <h2 className="text-lg font-semibold text-teal mb-4">
                   Pasientinfo
@@ -317,11 +269,59 @@ export default function PatientDetailsPage() {
               )}
             </div>
 
+            {/* Siste status */}
+            <div className="lg:col-span-3 space-y-6">
+              <div className="bg-white p-4 rounded-xl shadow text-center border">
+                <p className="text-sm text-gray-600">Siste status:</p>
+                <p className="text-lg font-semibold text-green-600">
+                  {getLabel(patient.smertehistorikk.at(-1)?.verdi)}
+                </p>
+              </div>
+            </div>
+
             {/* Speedometer */}
             <div className="lg:col-span-3 space-y-6">
               <Speedometer
                 smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
               />
+            </div>
+
+            {/* Sjekkliste */}
+            <div className="lg:col-span-3">
+              <div className="bg-white p-4 rounded-xl shadow text-sm border">
+                <h2 className="text-center font-semibold text-gray-600">
+                  Sjekkliste for pasienter i alderen {patient.alder}
+                </h2>
+                <ul className="mt-2 list-disc pl-4 text-gray-500">
+                  <li>
+                    Benkjørhet <input type="checkbox" />
+                  </li>
+                  <li>
+                    Fallfare og balanse <input type="checkbox" />
+                  </li>
+                  <li>
+                    Hjerte-/karsykdommer <input type="checkbox" />
+                  </li>
+                  <li>
+                    Medisinbruk <input type="checkbox" />
+                  </li>
+                  <li>
+                    Sarkopeni <input type="checkbox" />
+                  </li>
+                  <li>
+                    Kognitiv funksjon og læringsevne <input type="checkbox" />
+                  </li>
+                  <li>
+                    Motivasjon, psykisk helse <input type="checkbox" />
+                  </li>
+                  <li>
+                    Hverdagsfunksjon og boligforhold <input type="checkbox" />
+                  </li>
+                  <li>
+                    Restitusjon <input type="checkbox" />
+                  </li>
+                </ul>
+              </div>
             </div>
 
             {/* Lag ny rapport knapp */}
