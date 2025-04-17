@@ -223,14 +223,14 @@ export default function PatientDetailsPage() {
   return (
     <MaxWidthWrapper>
       <div className="p-8 max-w-6xl mx-auto bg-light min-h-screen">
-        <h1 className="text-3xl font-bold mb-10 text-teal">
+        <h1 className="text-3xl font-bold mb-10 text-teal text-center">
           Pasientdetaljer for {patient?.navn}:
         </h1>
 
         {patient ? (
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Statuskort + Sjekkliste */}
-            <div className="lg:col-span-3 space-y-6">
+            <div className="lg:col-span-4 space-y-6">
               <div className="bg-white p-4 rounded-xl shadow text-center border">
                 <p className="text-sm text-gray-600">Siste status:</p>
                 <p className="text-lg font-semibold text-green-600">
@@ -275,7 +275,7 @@ export default function PatientDetailsPage() {
             </div>
 
             {/* Info + graf */}
-            <div className="lg:col-span-6 space-y-6">
+            <div className="lg:col-span-4 space-y-6">
               <div className="bg-white p-6 rounded-xl shadow border">
                 <h2 className="text-lg font-semibold text-teal mb-4">
                   Pasientinfo
@@ -289,7 +289,9 @@ export default function PatientDetailsPage() {
                   {renderField("E-post", "epost")}
                 </div>
               </div>
+            </div>
 
+            <div className="lg:col-span-6 space-y-6">
               {patient.smertehistorikk?.length > 0 && (
                 <div className="bg-white p-6 rounded-xl shadow border">
                   <h2 className="text-lg font-semibold text-teal mb-4">
@@ -313,7 +315,7 @@ export default function PatientDetailsPage() {
             </div>
 
             {/* Speedometer + siste rapporter */}
-            <div className="lg:col-span-3 space-y-6">
+            <div className="lg:col-span-4 space-y-6">
               <Speedometer
                 smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
               />
