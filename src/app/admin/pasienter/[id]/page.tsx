@@ -218,13 +218,53 @@ export default function PatientDetailsPage() {
   return (
     <MaxWidthWrapper>
       <div className="p-8 max-w-6xl mx-auto bg-light min-h-screen">
-        <h1 className="text-3xl font-bold mb-10 text-teal">
+        <h1 className="text-3xl font-bold mb-10 text-teal text-center">
           Pasientdetaljer for {patient?.navn}:
         </h1>
 
         {patient ? (
           <div className="grid lg:grid-cols-12 gap-8">
-            {/* Statuskort + Sjekkliste */}
+            <div className="lg:col-span-3 space-y-6">
+              <div className="bg-white p-6 rounded-xl shadow border">
+                <h2 className="text-lg font-semibold text-teal mb-4">
+                  Pasientinfo
+                </h2>
+                <div className="space-y-3 text-sm text-gray-700">
+                  {renderField("Navn", "navn")}
+                  {renderField("Alder", "alder")}
+                  {renderField("Kjønn", "kjønn")}
+                  {renderField("Adresse", "adresse")}
+                  {renderField("Telefon", "telefon")}
+                  {renderField("E-post", "epost")}
+                </div>
+              </div>
+            </div>
+
+            {/* Smertehistorikk */}
+            <div className="lg:col-span-6 space-y-6">
+              {patient.smertehistorikk?.length > 0 && (
+                <div className="bg-white p-6 rounded-xl shadow border">
+                  <h2 className="text-lg font-semibold text-teal mb-4">
+                    Smerteutvikling
+                  </h2>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <LineChart
+                      data={patient.smertehistorikk.map((entry) => ({
+                        ...entry,
+                        dato: new Date(entry.dato).toLocaleDateString("no-NO"),
+                      }))}
+                    >
+                      <XAxis dataKey="dato" />
+                      <YAxis domain={[0, 10]} />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="verdi" stroke="#ef4444" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </div>
+
+            {/* Siste status */}
             <div className="lg:col-span-3 space-y-6">
               <div className="bg-white p-4 rounded-xl shadow text-center border">
                 <Link href={`/logg/${patient._id}`}>
@@ -233,7 +273,17 @@ export default function PatientDetailsPage() {
                   </button>
                 </Link>
               </div>
+            </div>
 
+            {/* Speedometer */}
+            <div className="lg:col-span-3 space-y-6">
+              <Speedometer
+                smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
+              />
+            </div>
+
+            {/* Sjekkliste */}
+            <div className="lg:col-span-3">
               <div className="bg-white p-4 rounded-xl shadow text-sm border">
                 <h2 className="text-center font-semibold text-gray-600">
                   Sjekkliste for pasienter i alderen {patient.alder}
@@ -267,74 +317,6 @@ export default function PatientDetailsPage() {
                     Restitusjon <input type="checkbox" />
                   </li>
                 </ul>
-              </div>
-            </div>
-
-            {/* Info + graf */}
-            <div className="lg:col-span-6 space-y-6">
-              <div className="bg-white p-6 rounded-xl shadow border">
-                <h2 className="text-lg font-semibold text-teal mb-4">
-                  Pasientinfo
-                </h2>
-                <div className="space-y-3 text-sm text-gray-700">
-                  {renderField("Navn", "navn")}
-                  {renderField("Alder", "alder")}
-                  {renderField("Kjønn", "kjønn")}
-                  {renderField("Adresse", "adresse")}
-                  {renderField("Telefon", "telefon")}
-                  {renderField("E-post", "epost")}
-                </div>
-              </div>
-
-              {patient.smertehistorikk?.length > 0 && (
-                <div className="bg-white p-6 rounded-xl shadow border">
-                  <h2 className="text-lg font-semibold text-teal mb-4">
-                    Smerteutvikling
-                  </h2>
-                  <ResponsiveContainer width="100%" height={250}>
-                    <LineChart
-                      data={patient.smertehistorikk.map((entry) => ({
-                        ...entry,
-                        dato: new Date(entry.dato).toLocaleDateString("no-NO"),
-                      }))}
-                    >
-                      <XAxis dataKey="dato" />
-                      <YAxis domain={[0, 10]} />
-                      <Tooltip />
-                      <Line type="monotone" dataKey="verdi" stroke="#ef4444" />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              )}
-            </div>
-
-            {/* Speedometer + siste rapporter */}
-            <div className="lg:col-span-3 space-y-6">
-              <Speedometer
-                smerteVerdi={patient.smertehistorikk.at(-1)?.verdi ?? 0}
-              />
-
-              <AiAssistentPanel
-                rapporter={reports}
-                smertehistorikk={patient.smertehistorikk}
-                onUse={(tekst) => {
-                  localStorage.setItem("foreslaattRapport", tekst);
-                  localStorage.setItem("foreslaattPasientId", patient._id); // 👈
-                  window.location.href = "/admin/rapporter";
-                }}
-              />
-
-              <div className="flex gap-2 justify-center">
-                <DeletePatientButton
-                  patientId={patient._id}
-                  patientName={patient.navn}
-                  redirectAfterDelete={true}
-                />
-                <Link href="/admin/rapporter">
-                  <button className="bg-light_teal text-white rounded-sm px-3 py-4 text-sm">
-                    Lag ny rapport 📝
-                  </button>
-                </Link>
               </div>
             </div>
 
@@ -435,6 +417,25 @@ export default function PatientDetailsPage() {
                 >
                   Lagre logg
                 </button>
+              </div>
+            </div>
+            {/* Lag ny rapport knapp */}
+            <div className="lg:col-span-3 space-y-6">
+              <Link href="/admin/rapporter">
+                <button className="bg-light_teal text-white rounded-sm px-3 py-4 text-sm">
+                  Lag ny rapport 📝
+                </button>
+              </Link>
+            </div>
+
+            {/* Slett pasient knapp */}
+            <div className="lg:col-span-3 space-y-6">
+              <div className="flex gap-2 justify-center">
+                <DeletePatientButton
+                  patientId={patient._id}
+                  patientName={patient.navn}
+                  redirectAfterDelete={true}
+                />
               </div>
             </div>
           </div>
