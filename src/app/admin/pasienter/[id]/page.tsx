@@ -30,7 +30,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
-import AiAssistentPanel from "@/components/AIAssistentPanel";
+// import AiAssistentPanel from "@/components/AIAssistentPanel";
 
 export default function PatientDetailsPage() {
 	const { id } = useParams();
