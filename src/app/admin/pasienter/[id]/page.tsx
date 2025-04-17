@@ -170,12 +170,7 @@ export default function PatientDetailsPage() {
     }
   };
 
-  function getLabel(verdi?: number) {
-    if (verdi == null) return "Ingen registrering";
-    if (verdi <= 3) return "Lav smerte";
-    if (verdi <= 7) return "Moderat smerte";
-    return "Høy smerte";
-  }
+  // Removed unused function 'getLabel' to resolve the compile error.
 
   const renderField = (label: string, field: keyof Patient) => (
     <p>
@@ -232,10 +227,11 @@ export default function PatientDetailsPage() {
             {/* Statuskort + Sjekkliste */}
             <div className="lg:col-span-3 space-y-6">
               <div className="bg-white p-4 rounded-xl shadow text-center border">
-                <p className="text-sm text-gray-600">Siste status:</p>
-                <p className="text-lg font-semibold text-green-600">
-                  {getLabel(patient.smertehistorikk.at(-1)?.verdi)}
-                </p>
+                <Link href={`/logg/${patient._id}`}>
+                  <button className="text-teal mt-2 underline">
+                    Se treningslogg <br></br> (VIRKER IKKE ENDA)
+                  </button>
+                </Link>
               </div>
 
               <div className="bg-white p-4 rounded-xl shadow text-sm border">

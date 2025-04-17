@@ -40,13 +40,14 @@ export const SidebarProvider = ({
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
 }) => {
-  const [openState, setOpenState] = useState(false);
+  const [openState] = useState(false);
 
   const open = openProp !== undefined ? openProp : openState;
-  const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>
+    <SidebarContext.Provider
+      value={{ open, setOpen: setOpenProp!, animate: animate }}
+    >
       {children}
     </SidebarContext.Provider>
   );
@@ -90,6 +91,7 @@ export const DesktopSidebar = ({
         "h-full px-4 py-4 hidden md:flex md:flex-col bg-teal dark:bg-neutral-800 shrink-0",
         className
       )}
+      style={{ position: "sticky", top: 0 }} // Endret til sticky for å unngå overlapping
       animate={{
         width: "200px", // Fast bredde for sidebaren
       }}
