@@ -324,26 +324,6 @@ export default function PatientDetailsPage() {
               </div>
             </div>
 
-            {/* Lag ny rapport knapp */}
-            <div className="lg:col-span-3 space-y-6">
-              <Link href="/admin/rapporter">
-                <button className="bg-light_teal text-white rounded-sm px-3 py-4 text-sm">
-                  Lag ny rapport 📝
-                </button>
-              </Link>
-            </div>
-
-            {/* Slett pasient knapp */}
-            <div className="lg:col-span-3 space-y-6">
-              <div className="flex gap-2 justify-center">
-                <DeletePatientButton
-                  patientId={patient._id}
-                  patientName={patient.navn}
-                  redirectAfterDelete={true}
-                />
-              </div>
-            </div>
-
             {/* Alle rapporter */}
             <div className="lg:col-span-12 mt-10" id="rapporter">
               <div className="bg-white p-6 rounded-xl shadow border">
@@ -441,6 +421,25 @@ export default function PatientDetailsPage() {
                 >
                   Lagre logg
                 </button>
+              </div>
+            </div>
+            {/* Lag ny rapport knapp */}
+            <div className="lg:col-span-3 space-y-6">
+              <Link href="/admin/rapporter">
+                <button className="bg-light_teal text-white rounded-sm px-3 py-4 text-sm">
+                  Lag ny rapport 📝
+                </button>
+              </Link>
+            </div>
+
+            {/* Slett pasient knapp */}
+            <div className="lg:col-span-3 space-y-6">
+              <div className="flex gap-2 justify-center">
+                <DeletePatientButton
+                  patientId={patient._id}
+                  patientName={patient.navn}
+                  redirectAfterDelete={true}
+                />
               </div>
             </div>
           </div>
