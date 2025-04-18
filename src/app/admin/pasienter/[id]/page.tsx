@@ -228,9 +228,11 @@ export default function PatientDetailsPage() {
             <div className="lg:col-span-3 space-y-6">
               <div className="bg-white p-4 rounded-xl shadow text-center border">
                 <Link href={`/logg/${patient._id}`}>
-                  <button className="text-teal mt-2 underline">
-                    Se treningslogg <br></br> (VIRKER IKKE ENDA)
-                  </button>
+                  <Link href={`/logg/${patient._id}`}>
+                    <button className="text-teal mt-2 underline">
+                      Se treningslogg
+                    </button>
+                  </Link>
                 </Link>
               </div>
 
