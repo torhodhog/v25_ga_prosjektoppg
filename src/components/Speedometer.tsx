@@ -8,7 +8,7 @@ export default function Speedometer({ smerteVerdi }: Props) {
   const angle = (smerteVerdi / 10) * 180;
 
   return (
-    <div className="relative w-64 h-40 bg-white rounded-2xl shadow-lg flex flex-col items-center justify-center p-4">
+    <div className="relative w-64 h-40 bg-white rounded-sm shadow-lg flex flex-col items-center justify-center p-4">
       <svg viewBox="0 0 200 100" className="w-full h-full">
   <defs>
   <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">

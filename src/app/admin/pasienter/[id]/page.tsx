@@ -20,13 +20,13 @@
 "use client";
 
 import DeletePatientButton from "@/components/DeletePatientButton";
-import DeleteReportButton from "@/components/DeleteReportButton";
+// import DeleteReportButton from "@/components/DeleteReportButton";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 
 import Speedometer from "@/components/Speedometer";
-import MeldingListe from "@/components/MeldingListe";
 
-import { useParams } from "next/navigation";
+
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -38,9 +38,12 @@ import {
   Tooltip,
 } from "recharts";
 import AiAssistentPanel from "@/components/AIAssistentPanel";
+import { ArrowLeft } from "lucide-react";
+
 
 export default function PatientDetailsPage() {
   const { id } = useParams();
+  const router = useRouter();
 
   interface Patient {
     _id: string;
@@ -64,50 +67,33 @@ export default function PatientDetailsPage() {
     dato: string;
   }
 
-  interface Melding {
-    _id: string;
-    sender: string;
-    mottakerId: string;
-    innhold: string;
-    timestamp: string;
-  }
+
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
-  const [meldinger, setMeldinger] = useState<Melding[]>([]);
+  
   const [editableField, setEditableField] = useState<keyof Patient | null>(
     null
   );
   const [editedValue, setEditedValue] = useState<string | number>("");
-  const [open, setOpen] = useState(false);
-  const [logg, setLogg] = useState("");
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+//   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const [patientRes, reportsRes, meldingerRes] = await Promise.all([
-        fetch(
-          `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
-          { credentials: "include" } // Bruk cookies for autentisering
-        ),
-        fetch(
-          `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,
-          { credentials: "include" } // Bruk cookies for autentisering
-        ),
-        fetch(
-          `https://fysioterapi-backend-production.up.railway.app/api/meldinger/${id}`,
-          { credentials: "include" } // Bruk cookies for autentisering
-        ),
+      const [patientRes, reportsRes] = await Promise.all([
+        fetch(`https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,{ credentials: "include" } ),
+        fetch( `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${id}`,{ credentials: "include" }),
+       
       ]);
 
       const patientData = await patientRes.json();
       const reportsData = await reportsRes.json();
-      const meldingerData = await meldingerRes.json();
+		
+   
 
       setPatient(patientData);
       setReports(reportsData);
-      setMeldinger(meldingerData);
+    
     };
 
     fetchData();
@@ -115,15 +101,14 @@ export default function PatientDetailsPage() {
 
   const handleSave = async () => {
     if (!editableField || !patient) return;
-    const token = localStorage.getItem("token");
 
     const res = await fetch(
       `https://fysioterapi-backend-production.up.railway.app/api/pasienter/${id}`,
       {
         method: "PUT",
+        credentials: "include", 
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ [editableField]: editedValue }),
       }
@@ -133,44 +118,6 @@ export default function PatientDetailsPage() {
     setPatient(updated);
     setEditableField(null);
   };
-
-  const opprettLogg = async () => {
-    setError("");
-    setSuccess("");
-
-    try {
-      const res = await fetch("/api/logg", {
-        method: "POST",
-        credentials: "include", // Bruk cookies for autentisering
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          pasientId: id,
-          tekst: logg,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Kunne ikke opprette logg");
-      }
-
-      setSuccess("Logg opprettet!");
-      setLogg("");
-    } catch (err) {
-      if (err && typeof err === "object" && "message" in err) {
-        setError(
-          err && typeof err === "object" && "message" in err
-            ? (err.message as string) || "Noe gikk galt"
-            : "Noe gikk galt"
-        );
-      } else {
-        setError("Noe gikk galt");
-      }
-    }
-  };
-
-  // Removed unused function 'getLabel' to resolve the compile error.
 
   const renderField = (label: string, field: keyof Patient) => (
     <p>
@@ -218,6 +165,15 @@ export default function PatientDetailsPage() {
   return (
     <MaxWidthWrapper>
       <div className="p-8 max-w-6xl mx-auto bg-light min-h-screen">
+		<div>
+     <button
+       onClick={() => router.back()} 
+       className="flex items-center gap-2 text-teal hover:underline"
+     >
+       <ArrowLeft className="h-5 w-5" />
+       Tilbake
+     </button>
+   </div>
         <h1 className="text-3xl font-bold mb-10 text-teal">
           Pasientdetaljer for {patient?.navn}:
         </h1>
@@ -226,17 +182,24 @@ export default function PatientDetailsPage() {
           <div className="grid lg:grid-cols-12 gap-8">
             {/* Statuskort + Sjekkliste */}
             <div className="lg:col-span-3 space-y-6">
-              <div className="bg-white p-4 rounded-xl shadow text-center border">
-                <Link href={`/logg/${patient._id}`}>
-                  <Link href={`/logg/${patient._id}`}>
-                    <button className="text-teal mt-2 underline">
-                      Se treningslogg
-                    </button>
-                  </Link>
+            
+                <Link href={`/admin/logg/${patient._id}`}>
+                  <button className="bg-light_teal text-white rounded px-3 py-2 text-sm">
+                    Se treningslogg 📋
+                  </button>
                 </Link>
-              </div>
+              
 
-              <div className="bg-white p-4 rounded-xl shadow text-sm border">
+              
+
+              <div>
+				  <Link href={`/admin/notat/${patient._id}`}>
+  <button className="bg-light_teal text-white rounded px-3 py-2 text-sm">
+    Lag nytt notat 🧠
+  </button>
+</Link>
+
+              </div><div className="bg-white p-4 rounded-sm shadow text-sm border">
                 <h2 className="text-center font-semibold text-gray-600">
                   Sjekkliste for pasienter i alderen {patient.alder}
                 </h2>
@@ -274,7 +237,7 @@ export default function PatientDetailsPage() {
 
             {/* Info + graf */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="bg-white p-6 rounded-xl shadow border">
+              <div className="bg-white p-6 rounded-sm shadow border">
                 <h2 className="text-lg font-semibold text-teal mb-4">
                   Pasientinfo
                 </h2>
@@ -289,7 +252,7 @@ export default function PatientDetailsPage() {
               </div>
 
               {patient.smertehistorikk?.length > 0 && (
-                <div className="bg-white p-6 rounded-xl shadow border">
+                <div className="bg-white p-6 rounded-sm shadow border">
                   <h2 className="text-lg font-semibold text-teal mb-4">
                     Smerteutvikling
                   </h2>
@@ -341,104 +304,42 @@ export default function PatientDetailsPage() {
             </div>
 
             {/* Alle rapporter */}
-            <div className="lg:col-span-12 mt-10" id="rapporter">
-              <div className="bg-white p-6 rounded-xl shadow border">
-                <h2 className="text-lg font-semibold text-teal mb-4">
-                  Tidligere rapporter
-                </h2>
-                {reports.length > 0 ? (
-                  <ul className="space-y-3 text-sm text-gray-700">
-                    {reports.map((r) => {
-                      const [symptomer, observasjoner, tiltak] =
-                        r.innhold.split("\n\n");
-                      return (
-                        <li
-                          key={r._id}
-                          className="border p-4 rounded shadow-sm bg-white hover:bg-gray-50 transition cursor-pointer"
-                          onClick={() => setOpen((prev) => !prev)}
-                        >
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="text-sm text-gray-500 font-medium">
-                                {new Date(r.dato).toLocaleDateString("no-NO")}
-                              </p>
-                              {!open ? (
-                                <p className="mt-1 text-gray-500 italic truncate">
-                                  {r.innhold.slice(0, 80)}...
-                                </p>
-                              ) : (
-                                <div className="mt-2 space-y-2 whitespace-pre-line">
-                                  <p>
-                                    <strong>🩺 Symptomer:</strong>
-                                    <br />
-                                    {symptomer || "Ikke spesifisert"}
-                                  </p>
-                                  <p>
-                                    <strong>👁 Observasjoner:</strong>
-                                    <br />
-                                    {observasjoner || "Ikke spesifisert"}
-                                  </p>
-                                  <p>
-                                    <strong>✅ Tiltak:</strong>
-                                    <br />
-                                    {tiltak || "Ikke spesifisert"}
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-
-                            <DeleteReportButton
-                              reportId={r._id}
-                              onDeleted={() =>
-                                setReports((prev) =>
-                                  prev.filter((rep) => rep._id !== r._id)
-                                )
-                              }
-                            />
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ) : (
-                  <p className="italic text-gray-400">
-                    Ingen rapporter registrert.
-                  </p>
-                )}
-              </div>
+            {/* Rapportsammendrag med lenker */}
+<div className="lg:col-span-12 mt-10" id="rapporter">
+  <div className="bg-white p-6 rounded-sm shadow border">
+    <h2 className="text-lg font-semibold text-teal mb-4">
+      Tidligere rapporter
+    </h2>
+    {reports.length > 0 ? (
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {reports.map((r) => (
+          <Link
+            key={r._id}
+            href={`/admin/rapporter/${r._id}`}
+            className="block border rounded-lg p-4 bg-light hover:bg-white shadow-sm transition group"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-sm text-gray-500 font-medium">
+                {new Date(r.dato).toLocaleDateString("no-NO")}
+              </p>
+              <span className="text-gray-400 group-hover:text-teal">
+                📄
+              </span>
             </div>
+            <p className="text-gray-600 text-sm italic line-clamp-3">
+              {r.innhold.replace(/\n/g, " ").slice(0, 140)}...
+            </p>
+          </Link>
+        ))}
+      </div>
+    ) : (
+      <p className="italic text-gray-400">Ingen rapporter registrert.</p>
+    )}
+  </div>
+</div>
 
-            {/* Meldinger */}
-            <div className="lg:col-span-12">
-              <MeldingListe meldinger={meldinger} setMeldinger={setMeldinger} />
-            </div>
 
-            {/* Opprett logg */}
-            <div className="lg:col-span-12 mt-10">
-              <div className="bg-white p-6 rounded-xl shadow border">
-                <h2 className="text-lg font-semibold text-teal mb-4">
-                  Opprett logg for pasient
-                </h2>
-
-                {error && <p className="text-red-500">{error}</p>}
-                {success && <p className="text-green-500">{success}</p>}
-
-                <textarea
-                  value={logg}
-                  onChange={(e) => setLogg(e.target.value)}
-                  placeholder="Skriv loggtekst her..."
-                  className="w-full border p-2 rounded mb-4"
-                  rows={5}
-                />
-
-                <button
-                  onClick={opprettLogg}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Lagre logg
-                </button>
-              </div>
-            </div>
+         
           </div>
         ) : (
           <p>Laster pasientinformasjon...</p>

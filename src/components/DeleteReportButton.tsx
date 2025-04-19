@@ -25,13 +25,11 @@ export default function DeleteReportButton({ reportId, onDeleted }: Props) {
       return;
     }
 
-    const res = await fetch(
+       const res = await fetch(
       `https://fysioterapi-backend-production.up.railway.app/api/rapporter/${reportId}`,
       {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: "include", // Bruker cookies for autentisering
       }
     );
 

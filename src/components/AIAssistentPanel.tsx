@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface Rapport {
   _id: string;
@@ -22,20 +23,18 @@ export default function AiAssistentPanel({ rapporter, smertehistorikk, onUse }: 
   const [aiForslag, setAiForslag] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const hentAI = async () => {
       setLoading(true);
       setError(null);
 
-     
-
       try {
         const res = await fetch("/api/ai/generate-summary", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ rapporter, smertehistorikk }),
-
         });
 
         if (!res.ok) {
@@ -46,11 +45,7 @@ export default function AiAssistentPanel({ rapporter, smertehistorikk, onUse }: 
         const data: { result: string } = await res.json();
         setAiForslag(data.result);
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Ukjent feil.");
-        }
+        setError(err instanceof Error ? err.message : "Ukjent feil.");
       } finally {
         setLoading(false);
       }
@@ -60,33 +55,41 @@ export default function AiAssistentPanel({ rapporter, smertehistorikk, onUse }: 
   }, [rapporter, smertehistorikk]);
 
   return (
-    <div className="bg-white p-4 rounded-xl shadow border">
-      <h3 className="font-semibold text-sm text-teal mb-2">
-        AI-assistent: Oppsummering og forslag
-      </h3>
+    <div className="bg-white p-4 rounded-sm shadow border">
+      <button
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex items-center justify-between w-full text-left font-semibold text-sm text-teal"
+      >
+        <span>AI-assistent: Oppsummering og forslag</span>
+        {open ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+      </button>
 
-      {loading && <p className="text-sm text-gray-400">Genererer forslag...</p>}
-      {error && <p className="text-sm text-red-500">⚠️ {error}</p>}
+      {open && (
+        <div className="mt-4">
+          {loading && <p className="text-sm text-gray-400">Genererer forslag...</p>}
+          {error && <p className="text-sm text-red-500">⚠️ {error}</p>}
 
-      {aiForslag && (
-        <>
-          <p className="text-gray-600 text-sm mb-2 italic">
-            Basert på pasientens rapporter og smerteutvikling foreslår AI følgende:
-          </p>
+          {aiForslag && (
+            <>
+              <p className="text-gray-600 text-sm mb-2 italic">
+                Basert på pasientens rapporter og smerteutvikling foreslår AI følgende:
+              </p>
 
-          <div className="bg-light p-3 rounded text-sm text-gray-700 whitespace-pre-line">
-            {aiForslag}
-          </div>
+              <div className="bg-light p-3 rounded text-sm text-gray-700 whitespace-pre-line">
+                {aiForslag}
+              </div>
 
-          {onUse && (
-            <button
-              onClick={() => onUse(aiForslag)}
-              className="mt-4 bg-teal text-white px-4 py-2 rounded hover:bg-light_teal transition"
-            >
-              Bruk i ny rapport 📝
-            </button>
+              {onUse && (
+                <button
+                  onClick={() => onUse(aiForslag)}
+                  className="mt-4 bg-teal text-white px-4 py-2 rounded hover:bg-light_teal transition"
+                >
+                  Bruk i ny rapport 📝
+                </button>
+              )}
+            </>
           )}
-        </>
+        </div>
       )}
     </div>
   );
