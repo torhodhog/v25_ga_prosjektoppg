@@ -66,13 +66,19 @@ export default function VarslerPage() {
           credentials: "include",
         }
       );
+  
+      // Fjern fra visning
       setVarsler((prev) => prev.filter((v) => v._id !== varsel._id));
-      router.push(`/admin/pasienter/${varsel.pasientId._id}`);
+  
+      // Vent litt før navigasjon
+      setTimeout(() => {
+        router.push(`/admin/pasienter/${varsel.pasientId._id}`);
+      }, 200);
     } catch (err) {
       console.error("Feil ved oppdatering av varsel:", err);
     }
   };
-
+  
   const slettVarsel = async (id: string) => {
     try {
       await fetch(

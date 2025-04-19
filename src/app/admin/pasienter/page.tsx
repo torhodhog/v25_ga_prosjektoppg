@@ -72,14 +72,14 @@ export default function PasientPage() {
       return;
     }
 
-    const res = await fetch(
+        const res = await fetch(
       "https://fysioterapi-backend-production.up.railway.app/api/pasienter",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include", // Bruker cookies for autentisering
         body: JSON.stringify({
           navn,
           alder: Number(alder),
@@ -87,6 +87,7 @@ export default function PasientPage() {
         }),
       }
     );
+    
 
     if (!res.ok) {
       const errorData = await res.json();

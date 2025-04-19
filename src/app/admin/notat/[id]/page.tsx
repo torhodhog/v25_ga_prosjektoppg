@@ -93,6 +93,17 @@ export default function NotatPage() {
     }
   };
 
+  function getWeekNumber(date: Date): number {
+    const target = new Date(date.valueOf());
+    const dayNr = (date.getDay() + 6) % 7;
+    target.setDate(target.getDate() - dayNr + 3);
+    const firstThursday = target.valueOf();
+    target.setMonth(0, 1);
+    const jan4 = target.valueOf();
+    return 1 + Math.round((firstThursday - jan4) / 604800000);
+  }
+  
+
   return (
     <>
       <div className="max-w-3xl mx-auto p-6">
@@ -111,6 +122,22 @@ export default function NotatPage() {
 
         {error && <p className="text-red-500 mb-2">{error}</p>}
         {success && <p className="text-green-500 mb-2">{success}</p>}
+
+
+                {/* Dato og ukenummer */}
+                <div className="text-sm text-gray-500 mb-4">
+          <p>
+            📅 Dato: {new Date().toLocaleDateString("no-NO", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+          <p>
+            🔢 Ukenummer: {getWeekNumber(new Date())}
+          </p>
+        </div>
 
         <label className="block mb-1 font-medium text-gray-700">
           Behandlingsnotat
